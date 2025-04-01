@@ -1,0 +1,67 @@
+<!--
+SPDX-FileCopyrightText: 2025 tracetronic GmbH
+
+SPDX-License-Identifier: MIT
+-->
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="styles/popup.css" />
+  </head>
+
+  <body>
+    <div class="container">
+      <div class="container-header">
+        Diff artifacts with ecu.test
+        <img
+          id="go-to-options-icon"
+          src="icons/gearwheel.svg"
+          width="24px"
+          class="clickable rounded"
+          style="float: inline-end"
+        />
+      </div>
+
+      <div class="divider"></div>
+      <div class="container-content">
+        <p id="addhost" class="hidden">
+          Enable the plugin for the current host?<br />Add
+          <b id="addhost_host"></b> as
+
+          <select id="addhost_scm">
+            <option value="github">Github</option>
+            <option value="gitlab">Gitlab</option>
+          </select>
+          <button class="button-50" id="addhost_btn_submit">Add</button>
+        </p>
+
+        <div class="hidden" id="authStatus" style="min-width: 300px">
+          Loading...
+        </div>
+        <button
+          id="go-to-options"
+          class="button button-50 hidden"
+          style="margin-bottom: 16px"
+        >
+          Open options page
+        </button>
+        <div
+          id="error-message"
+          style="color: red; margin-right: 25px; min-width: 300px"
+        ></div>
+        <div id="content" class="content hidden">
+          <div style="font-weight: bold" id="heading">Modified file(s):</div>
+          <ul id="file-list">
+            <!-- Modified files will be added dynamically -->
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <script src="popup.js"></script>
+  </body>
+</html>

@@ -1,0 +1,21 @@
+/*
+ * SPDX-FileCopyrightText: 2025 tracetronic GmbH
+ *
+ * SPDX-License-Identifier: MIT
+ */
+
+.icon {
+  font-family: 'tt_iconfont';
+  font-size: 16px;
+  display: inline-block;
+  font-weight: 400;
+}
+.icon-tt-eye::before {
+  content: '';
+}
+.icon.icon-tt-eye-disabled::before {
+  content: '';
+}
+.icon.icon-tt-bin::before {
+  content: '';
+}

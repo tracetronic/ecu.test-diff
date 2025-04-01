@@ -1,0 +1,16 @@
+version = 1
+SPDX-PackageName = "ecu.test diff plugin"
+SPDX-PackageSupplier = "2025 tracetronic GmbH <info@tracetronic.de>"
+SPDX-PackageDownloadLocation = "https://hq-vcs-3.ad.tracetronic.de/TTS/browserplugins/diffplugin"
+
+[[annotations]]
+path = ["README.md", "webpack.prod.cjs", "webpack.common.cjs", "webpack.dev.cjs"]
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2025 tracetronic GmbH"
+SPDX-License-Identifier = "MIT"
+
+[[annotations]]
+path = ["static/fonts/**", "static/icons/**", "**.json", ".eslint*", ".gitignore", ".prettier*"]
+precedence = "aggregate"
+SPDX-FileCopyrightText = "none"
+SPDX-License-Identifier = "MIT"

@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: MIT
 
 import browser from 'webextension-polyfill';
-import { HostInfo, ModifiedFile, SUPPORTED_FILES } from './types.ts';
+import { HostInfo, ModifiedFile, SUPPORTED_FILES } from './types.js';
 import { Buffer } from 'buffer';
 
 // types for responses objects of github and gitlab and generalized types for common usage

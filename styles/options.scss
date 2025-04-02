@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: MIT
  */
 
-@import 'common.scss';
+@use 'common.scss';
 
 input.invalid {
   background-color: var(--color-funk-deep-red-50);// #ffb2b2;

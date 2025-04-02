@@ -61,7 +61,8 @@ jobs:
 
       - name: Create zip file
         run: |
-          zip -r ${{ matrix.browser }}-extension.zip dist/*
+          cd dist
+          zip -r ../${{ matrix.browser }}-extension.zip ./*
 
       - name: Upload extension zip
         uses: actions/upload-artifact@v4

@@ -59,14 +59,9 @@ jobs:
       - name: Build extension for ${{ matrix.browser }}
         run: npm run build-${{ matrix.browser }}
 
-      - name: Create zip file
-        run: |
-          cd dist
-          zip -r ../${{ matrix.browser }}-extension.zip ./*
-
       - name: Upload extension zip
         uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.browser }}-extension
-          path: ${{ matrix.browser }}-extension.zip
+          path: dist/*
           if-no-files-found: error

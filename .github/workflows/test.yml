@@ -2,6 +2,11 @@ name: Test
 
 on:
   workflow_call:
+    inputs:
+      node-version:
+        description: 'Node.js version to use for tests'
+        required: true
+        type: number
     outputs:
       test-result:
         description: 'Test result'
@@ -12,18 +17,15 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       result: ${{ steps.test-result.outputs.result }}
-    strategy:
-      matrix:
-        node-version: [18, 20]
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up Node.js ${{ matrix.node-version }}
+      - name: Set up Node.js ${{ inputs.node-version }}
         uses: actions/setup-node@v4
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: ${{ inputs.node-version }}
           cache: 'npm'
           cache-dependency-path: 'package-lock.json'
 

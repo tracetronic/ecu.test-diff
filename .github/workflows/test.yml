@@ -6,7 +6,6 @@ on:
       test-result:
         description: 'Test result'
         value: ${{ jobs.test.outputs.result }}
-  workflow_dispatch:
 
 jobs:
   test:

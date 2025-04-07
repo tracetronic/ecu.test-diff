@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 tracetronic GmbH
-//
-// SPDX-License-Identifier: MIT
-
 import expect from 'expect.js';
 import { scmAdapters } from '../src/scm.js';
 

@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 tracetronic GmbH
-//
-// SPDX-License-Identifier: MIT
-
 export const SUPPORTED_DIFF_FILES = ['pkg', 'ta', 'prj'];
 export const SUPPORTED_FILES = [...SUPPORTED_DIFF_FILES, 'trf'];
 

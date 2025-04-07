@@ -1,7 +1,7 @@
 {
-  "name": "chrome-extension-webpack",
-  "version": "1.0",
-  "description": "Get started with Chrome extensions development using webpack, Typescript, Sass, and more",
+  "name": "ecu.test_diff-extension",
+  "version": "1.0.0",
+  "description": "Browser plugin to open the diff viewer of tracetronic products ecu.test and trace.check from browser",
   "scripts": {
     "start-chrome": "webpack --env TARGET=chrome --watch --config webpack.dev.cjs",
     "start-firefox": "webpack --env TARGET=firefox --watch --config webpack.dev.cjs",

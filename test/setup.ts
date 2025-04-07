@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 tracetronic GmbH
-//
-// SPDX-License-Identifier: MIT
-
 // The chrome API won't be available in the test environment, so it has to be mocked
 // Of course, you can remove this setup file if you don't want to test interactions with the chrome API
 import sinonChrome from 'sinon-chrome';

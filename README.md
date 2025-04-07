@@ -1,25 +1,15 @@
-<!--
-SPDX-FileCopyrightText: 2025 tracetronic GmbH
-
-SPDX-License-Identifier: MIT
--->
-
-![ecu.test Diff Extension](https://blubb.png)
+# ecu.test Diff Extension
+## Description
 
 Browser plugin to open the diff viewer of tracetronic products ecu.test and trace.check from browser.
 
-## Announcements
-
-*Nothing to see here yet.*
+ecu.test Diff Extension is a bridge between the current browser tab and an installed ecu.test. It allows you to diff packages (`.pkg`) and other artifacts from an open commit or merge request with only a few simple clicks.
 
 ## Features
 
-ecu.test Diff Extension is a bridge between the current browser tab and an installed ecu.test. It allows you to diff packages (`.pkg`) and other artifacts 
-from an open commit or merge request with only a few simple clicks.
-
-SCM platforms:
-- Github
-- Gitlab
+Supported SCM platforms:
+- GitHub
+- GitLab
 
 Supported entry points
 - Single commits
@@ -63,60 +53,29 @@ You are good to go! You can also pin the extension to the toolbar for easy acces
 - Click on a file and click on "Show diff".
 - ecu.test Diff-Viewer will be opened. This needs ecu.test installed and a valid license available!
 
-### Developer Guide
-#### Install node.js
-First you have to install [node.js](https://nodejs.org/en/download) to have access to the package manager npm for building the browser extension.
-#### Install dependencies
-Open the ecu.test diff project in your IDE of choice and run the following terminal command to install the dependencies including typescript:
+### Documentation
+A detailed documentation on features, build and development setup can be found inside [docs folder](docs\DeveloperGuide.md). 
 
-```npm install -g typescript```
+### Contribution
+At the moment, no external contributions are intended and merge requests from forks will automatically be rejected!
+To report a bug or request an enhancement to this plugin please raise a new [GitHub issue](https://github.com/tracetronic/ecu.test-diff/issues).
 
-#### Build process
-If you want to build the ecu.test diff extension locally for development purpose or for production use, you have access to different scripts:
+### Support
 
-**<u>Note:</u>** All of these scripts can be found and modified within the './package.json' of the project.
-
-**Firefox:**
-```
-npm run start-firefox
-npm run build-firefox
-```
-**Chrome/Edge:**
-```
-npm run start-chrome
-npm run build-chrome
-```
-Your compiles files are available inside the './dist' folder after the build process.
-For integration and testing into you browser you have to note some differences:
-
-In Chrome/Edge you can just select the './dist' folder inside you browser windows for importing the extension.
-
-In Firefox you can test the extension only in debug-mode. You have to klick on 'debug add-ons' and can afterwards select a .zip file for the import. You can create the .zip file on your own or use the tool web-ext (from mozilla). 
-```
-npm install web-ext
-cd ./dist
-web-ext build
-```
-This tooling also provide a help in the ['signing' process](https://extensionworkshop.com/documentation/develop/extensions-and-the-add-on-id/) which is required for the use of add-ons without debug-mode in firefox.
-
-#### Testing / Linting / Code formatting
-For these purposes there are three additional scripts which execute the local tests, start the linter in the source code and do some code formatting:
-
-```
-npm run test
-npm run lint
-npm run prettier
-```
-
-#### Open-Source Software compliance
-To ensure open-source complience with our provided software at tracetronic GmbH we use the tool [reuse](https://reuse.readthedocs.io/en/stable/readme.html). After installing the tooling in your local environment you can check for open-source compliance with:
-
-```reuse lint```
-
-If you want to add the SPDX-Headers automatically - in case there are a lot of files - you can do this with the following:
-
-```reuse annotate --copyright="tracetronic GmbH" --license=MIT -r <your_folder>/ ./<your_file>.ts```
+If you have any further questions, please contact us at [support@tracetronic.com](mailto:support@tracetronic.com).
 
 ### Licensing
-This work is licensed under MIT license. This project is based on the boilerplate [Chrome Extension Webpack](https://github.com/sszczep/chrome-extension-webpack).
+This work is licensed under MIT license. This project is based on the boilerplate [Chrome Extension Webpack](https://github.com/sszczep/chrome-extension-webpack) from Sebastian Szczepański. You can find the original license text inside [LICENSE.original](./LICENSE.original).
 
+To generate a software bill of material (sbom) we recommend using the [cyclondx](https://github.com/CycloneDX/cyclonedx-node-npm) tool:
+```bash
+#skip if you have cyclonedx already installed globally
+npm install --global @cyclonedx/cyclonedx-npm
+
+cyclonedx-npm --output-format json --output-file bom.json
+
+#uninstall cyclonedx if desired
+npm uninstall --global @cyclonedx/cyclonedx-npm
+```
+The generated sbom destination is ./bom.json by default. It can be changed using the options
+`--output-format` or `--output-file`.

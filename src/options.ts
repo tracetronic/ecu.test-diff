@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 tracetronic GmbH
-//
-// SPDX-License-Identifier: MIT
-
 import '../styles/options.scss';
 import browser from 'webextension-polyfill';
 import { Action, ScmHost, ServiceWorkerRequest } from './types';

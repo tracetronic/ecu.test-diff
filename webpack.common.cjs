@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2025 tracetronic GmbH
-//
-// SPDX-License-Identifier: MIT
-
 const path = require('path');
 
 const DotenvPlugin = require('dotenv-webpack');
@@ -33,7 +29,6 @@ module.exports = (env) => {
               options: {
                 api: 'modern-compiler',
                 sassOptions: {
-                  // Your sass options
                 },
               },
             },

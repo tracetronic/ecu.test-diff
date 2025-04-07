@@ -1,4 +1,4 @@
-name: Test and Build Chrome Extension
+name: Build Chrome Extension
 
 on:
   push:
@@ -12,29 +12,9 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: [18, 20]
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Set up Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ matrix.node-version }}
-          cache: 'npm'
-          cache-dependency-path: 'package-lock.json'
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Lint code
-        run: npm run lint
-
-      - name: Run tests
-        run: npm test
+      - uses: ./.github/workflows/test.yml
   build:
     needs: test
     runs-on: ubuntu-latest

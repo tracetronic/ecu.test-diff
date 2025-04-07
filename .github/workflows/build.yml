@@ -11,10 +11,8 @@ on:
 
 jobs:
   test:
-    runs-on: ubuntu-latest
+    uses: ./.github/workflows/test.yml
 
-    steps:
-      - uses: ./.github/workflows/test.yml
   build:
     needs: test
     runs-on: ubuntu-latest

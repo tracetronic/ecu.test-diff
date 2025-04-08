@@ -1,25 +1,52 @@
-# ecu.test diff extension developer documentation
-### Description
+# ecu.test diff extension developer documentation <!-- omit in toc -->
 
-Please have a look at section 'Description' inside [README.md](..\README.md 'Description').
+- [Description](#description)
+- [Features](#features)
+- [Fork information](#fork-information)
+- [Prerequisites](#prerequisites)
+  - [Install node.js](#install-nodejs)
+- [Development Setup](#development-setup)
+  - [Install dependencies](#install-dependencies)
+- [Build process](#build-process)
+- [Testing / Linting / Code formatting](#testing--linting--code-formatting)
+  - [Prettier](#prettier)
+  - [Linting](#linting)
+  - [Testing](#testing)
+- [CI Integration](#ci-integration)
+- [Open-Source Software compliance](#open-source-software-compliance)
+  - [reuse](#reuse)
+  - [Licensing](#licensing)
+  - [Cyclonedx](#cyclonedx)
 
-### Features
-Please have a look at section 'Features' inside [README.md](..\README.md 'Features').
+## Description
 
-### Fork information
+Please have a look at section 'Description' inside [README.md](..\README.md#description).
+
+
+## Features
+Please have a look at section 'Features' inside [README.md](..\README.md#features).
+
+
+## Fork information
 This project is based on the boilerplate [Chrome Extension Webpack](https://github.com/sszczep/chrome-extension-webpack) from Sebastian Szczepański.
 
-### Prerequisites
-#### Install node.js
+
+## Prerequisites
+### Install node.js
+
 First you have to install [node.js](https://nodejs.org/en/download) to have access to the package manager npm for building the browser extension.
 
-### Development Setup
-#### Install dependencies
+
+## Development Setup
+### Install dependencies
+
 Open the ecu.test diff project in your IDE of choice and run the following terminal command to install the dependencies including typescript:
 
 ```npm install -g typescript```
 
-### Build process
+
+## Build process
+
 If you want to build the ecu.test diff extension locally for development purpose or for production use, you have access to different scripts:
 
 **<u>Note:</u>** All of these scripts can be found and modified within the './package.json' of the project.
@@ -47,32 +74,58 @@ web-ext build
 ```
 This tooling also provide a help in the ['signing' process](https://extensionworkshop.com/documentation/develop/extensions-and-the-add-on-id/) which is required for the use of add-ons without debug-mode in firefox.
 
-### Testing / Linting / Code formatting
+
+## Testing / Linting / Code formatting
+
 For these purposes there are three additional scripts which execute the local tests, start the linter in the source code and do some code formatting:
 
-#### Prettier
+
+### Prettier
+
 Prettier is a code formatter that enforces a consistent style by parsing your code and re-printing it.
 
 ```bash
 npm run prettier
 ```
 
-#### Linting
+### Linting
+
 Use the internal npm linter with the follwing command:
 
 ```bash
 npm run lint
 ```
 
-#### Testing
+### Testing
+
 Your definded tests can be run with the command blow. The command runs all tests definded in the root 'test' folder and generates a coverage report.
 
 ```bash
 npm run test
 ```
 
-### Open-Source Software compliance
-#### reuse
+
+## CI Integration
+
+All CI workflows are located in `.github/workflows`
+
+| name                                    | on
+| output                                  | artifacts                                                         |
+| :-------------------------------------- | :---------------------------------------------------------------- | :---------- | :----------------------- |
+| [build](../.github/workflows/build.yml) | <ul><li>push and pr to `main`</li><li>workflow dispatch</li></ul> | -           | chrome and firefox build |
+| [test](../.github/workflows/test.yml)   | reused by [build](../.github/workflows/build.yml) workflow        | test result | -                        |
+| [reuse](../.github/workflows/reuse.yml) | <ul><li>push and pr to `main`</li><li>workflow dispatch</li></ul> | spdx sbom   | -                        |
+  
+Those workflows are running automatically after pushing some changes to the remote repository. The
+build workflow provides its artifacts additionally after each execution. 
+
+* firefox
+* chrome
+
+
+## Open-Source Software compliance
+### reuse
+
 To ensure open-source complience with our provided software at tracetronic GmbH we use the tool [reuse](https://reuse.readthedocs.io/en/stable/readme.html). After installing the tooling in your local environment you can check for open-source compliance with:
 
 ```reuse lint```
@@ -81,10 +134,13 @@ If you want to add the SPDX-Headers automatically - in case there are a lot of f
 
 ```reuse annotate --copyright="tracetronic GmbH" --license=MIT -r <your_folder>/ ./<your_file>.ts```
 
-#### Licensing
+
+### Licensing
+
 This work is licensed under MIT license. You can find the original license text from the [forked](#fork-information) project inside [LICENSE.original](../LICENSE.original).
 
-#### Cyclonedx
+
+### Cyclonedx
 
 To generate a software bill of material (sbom) for the project, run from your terminal root folder:
 ```bash

@@ -1,4 +1,15 @@
-# ecu.test Diff Extension
+# ecu.test Diff Extension <!-- omit in toc -->
+
+- [Description](#description)
+- [Features](#features)
+- [Getting started](#getting-started)
+  - [Installing and running](#installing-and-running)
+  - [Usage](#usage)
+  - [Documentation](#documentation)
+  - [Contribution](#contribution)
+  - [Support](#support)
+  - [Licensing](#licensing)
+
 ## Description
 
 Browser plugin to open the diff viewer of tracetronic products ecu.test and trace.check from browser.

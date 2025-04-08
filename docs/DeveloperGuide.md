@@ -114,7 +114,7 @@ All CI workflows are located in `.github/workflows`
 | :-------------------------------------- | :---------------------------------------------------------------- | :---------- | :----------------------- |
 | [build](../.github/workflows/build.yml) | <ul><li>push and pr to `main`</li><li>workflow dispatch</li></ul> | -           | chrome and firefox build |
 | [test](../.github/workflows/test.yml)   | reused by [build](../.github/workflows/build.yml) workflow        | test result | -                        |
-| [reuse](../.github/workflows/reuse.yml) | <ul><li>push and pr to `main`</li><li>workflow dispatch</li></ul> | spdx sbom   | -                        |
+| [reuse](../.github/workflows/reuse.yml) | <ul><li>push and pr to `main`</li><li>workflow dispatch</li></ul> | spdx sbom   | sbom.spdx                |
   
 Those workflows are running automatically after pushing some changes to the remote repository. The
 build workflow provides its artifacts additionally after each execution. 

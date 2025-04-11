@@ -1,0 +1,10 @@
+version = 1
+SPDX-PackageName = "ecu.test diff plugin"
+SPDX-PackageSupplier = "2025 tracetronic GmbH <info@tracetronic.de>"
+SPDX-PackageDownloadLocation = "https://github.com/tracetronic/ecu.test-diff"
+
+[[annotations]]
+path = ["**"]
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2025 tracetronic GmbH"
+SPDX-License-Identifier = "MIT"

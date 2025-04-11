@@ -1,0 +1,28 @@
+{
+  "manifest_version": 3,
+  "name": "Open with ecu.test diff",
+  "description": "Extension to open the ecu.test/trace.check diff viewer from Github.",
+  "version": "0.1.0",
+  "background": {},
+  "permissions": ["storage", "activeTab", "downloads"],
+  "options_ui": {
+    "page": "options.html",
+    "open_in_tab": true
+  },
+  "action": {
+    "default_title": "Open with ecu.test diff",
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icons/16x.png",
+      "32": "icons/32x.png",
+      "48": "icons/48x.png",
+      "128": "icons/128x.png"
+    }
+  },
+  "icons": {
+    "16": "icons/16x.png",
+    "32": "icons/32x.png",
+    "48": "icons/48x.png",
+    "128": "icons/128x.png"
+  }
+}

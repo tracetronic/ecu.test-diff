@@ -1,0 +1,33 @@
+@use 'common.scss';
+
+input.invalid {
+  background-color: var(--color-funk-deep-red-50);// #ffb2b2;
+}
+input.valid {
+  background-color: lightgreen;
+}
+
+// make input scale in width
+fieldset {
+  position: relative;
+  max-width: 700px;
+  border: none;
+
+  input {
+    position: absolute;
+    left: 0;
+    right: 0;
+  }
+}
+
+// host table
+.hosts {
+  text-align: left;
+
+  .hostinput {
+    min-width: 200px;
+  }
+  .tokeninput {
+    min-width: 400px;
+  }
+}

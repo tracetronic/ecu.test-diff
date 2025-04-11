@@ -1,0 +1,50 @@
+name: Build Browser Extension
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  test:
+    strategy:
+      matrix:
+        node-version: [18, 20]
+    uses: ./.github/workflows/test.yml
+    with:
+      node-version: ${{ matrix.node-version }}
+
+  build:
+    needs: test
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        browser: [chrome, firefox]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node v20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+          cache-dependency-path: 'package-lock.json'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build extension for ${{ matrix.browser }}
+        run: npm run build-${{ matrix.browser }}
+
+      - name: Upload extension zip
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.browser }}-extension
+          path: dist/*
+          if-no-files-found: error

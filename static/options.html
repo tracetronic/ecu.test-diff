@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <link rel="stylesheet" href="styles/options.css" />
+  </head>
+
+  <body>
+    <div style="padding: 1rem">
+      <div
+        class="headline-box-100"
+        style="font-size: 24px; padding-bottom: 1rem"
+      >
+        Configure Diff Extension
+      </div>
+      <div class="container">
+        <div class="container-header">Hosts</div>
+        <div class="divider"></div>
+        <div class="container-content">
+          <table class="hosts" id="hosts">
+            <thead>
+              <tr class="label-100">
+                <th>Platform</th>
+                <th>URL</th>
+                <th>Token</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+
+            <tfoot>
+              <tr>
+                <td colspan="2" style="padding: 4px">
+                  <button class="button-50 secondary" id="addhost">
+                    Add host
+                  </button>
+                  <button
+                    class="button-50 secondary"
+                    id="checkhosts"
+                    style="margin-left: 8px"
+                  >
+                    Check settings
+                  </button>
+                </td>
+
+                <td />
+                <td />
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+      </div>
+      <button id="saveOptions" style="margin-top: 12px">Save settings</button>
+      <span id="message" style="padding-left: 6px"></span>
+    </div>
+    <script src="options.js"></script>
+  </body>
+</html>

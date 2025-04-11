@@ -1,0 +1,217 @@
+@import 'tt_iconfont.css';
+
+@font-face {
+  font-family: 'Red Hat Display';
+  font-style: normal;
+  font-weight: 400;
+  font-display: block;
+  src: url('../static/fonts/red-hat-display-v14-latin-regular.woff2')
+    format('woff2');
+}
+
+/* icons */
+@font-face {
+  font-family: 'tt_iconfont';
+  font-style: normal;
+  font-weight: 400;
+  font-display: block;
+  src: url('../static/fonts/tt_iconfont.woff') format('woff');
+}
+
+@mixin font_readhat() {
+  font-family: 'Red Hat Display', 'sans-serif', 'Noto Sans SC', 'Noto Sans KR';
+  letter-spacing: 0.5px;
+}
+
+body {
+  font-size: 16px;
+  @include font_readhat();
+}
+
+.hidden {
+  display: none;
+}
+
+.success {
+  color: green;
+}
+.error {
+  color: red;
+}
+
+.input-group {
+  display: flex;
+
+  margin: 1rem 0;
+
+  flex-direction: row;
+  gap: 1rem;
+
+  align-items: center;
+}
+
+:root {
+  // colors
+  --color-funk-deep-red-100: #cc3333;
+  --color-funk-deep-red-50: #ffb5b5;
+  --color-funk-red-100: #f28379;
+  --color-funk-red-50: #f2d7ce;
+  --color-funk-green-100: #51b382;
+  --color-funk-green-50: #d2f7e5;
+  --color-tt-orange-100: #fe7f00;
+  --color-tt-orange-50: #ffbb77;
+  --color-tt-orange-30: #ffdbb7;
+  --color-tt-black-100: #000000;
+  --color-tt-white-100: #ffffff;
+  --color-tt-salvia-75: #c6cfcc;
+  --color-tt-salvia-50: #e2e7e5;
+  --color-tt-salvia-30: #edf2f0;
+  --color-tt-salvia-25: #f2f4f2;
+
+  --bg-color-initial: var(--color-tt-salvia-25);
+  --bg-color-hover: var(--color-tt-salvia-30);
+
+  // units
+  --rem-000: 0rem; // 0px
+  --rem-005: 0.0625rem; // 1px
+  --rem-010: 0.125rem; // 2px
+  --rem-025: 0.25rem; // 4px
+  --rem-050: 0.5rem; // 8px
+  --rem-075: 0.75rem; // 12px
+  --rem-100: 1rem; // 16px
+  --rem-150: 1.5rem; // 24px
+  --rem-200: 2rem; // 32px
+  --rem-400: 4rem; // 64px
+  --rem-800: 8rem; // 128px
+
+  // radius
+  --corner-radius-s: var(--rem-025);
+  --corner-radius-m: var(--rem-075);
+  --line-width-s: var(--rem-005);
+  --line-width-m: var(--rem-010);
+
+  --padding-xs: var(--rem-025);
+  --padding-s: var(--rem-05);
+  --padding-m: var(--rem-075);
+  --padding-l: var(--rem-100);
+  --padding-xl: var(--rem-150);
+}
+
+button {
+  background-color: #ffffff;
+  border: 1px solid var(--color-tt-salvia-50);
+  border-radius: 4px;
+  box-shadow: 0px 2px 0px 0px var(--color-tt-orange-100);
+  align-items: start;
+  align-content: stretch;
+  justify-content: start;
+  padding: 12px;
+  transition: background-color 0.2s ease-in-out;
+
+  @include font_readhat();
+  font-size: 16px;
+  line-height: 1;
+}
+button.secondary {
+  box-shadow: 0px 2px 0px 0px var(--color-tt-salvia-75);
+}
+button.button-50 {
+  font-size: 14px;
+  padding: 8px;
+}
+button:hover {
+  background-color: var(--bg-color-hover) !important;
+}
+img,
+.icon {
+  padding: 4px;
+}
+.rounded {
+  border-radius: 50%;
+}
+
+.clickable {
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+}
+.clickable:hover {
+  background-color: var(--bg-color-hover);
+}
+
+// typography
+.headline-box-100,
+.container-header {
+  @include font_readhat();
+  font-weight: 700;
+  font-size: 20px;
+}
+.headline-box-075 {
+  @include font_readhat();
+  font-weight: 700;
+  font-size: 16px;
+}
+
+.label-50 {
+  font-size: 12px;
+  color: rgba(0, 0, 0, 1);
+  caret-color: rgba(0, 0, 0, 1);
+  letter-spacing: 0.5px;
+}
+.label-100,
+input,
+select {
+  @include font_readhat();
+  font-weight: 400;
+  font-size: 16px;
+  color: rgba(0, 0, 0, 1);
+  caret-color: rgba(0, 0, 0, 1);
+  letter-spacing: 0.5px;
+}
+.label-200 {
+  font-size: 20px;
+  color: rgba(0, 0, 0, 1);
+  caret-color: rgba(0, 0, 0, 1);
+  letter-spacing: 0.5px;
+}
+
+// corporate
+/* Container / Combined / Basic */
+body {
+  background-color: var(--bg-color-initial);
+}
+.container {
+  background-color: #ffffff;
+  display: block;
+  overflow: hidden;
+  overflow-wrap: break-word;
+  position: relative;
+  padding: 0;
+  text-decoration: none;
+  transition-duration: 0.28s;
+  transition-property: box-shadow, opacity, background;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 0;
+  border-radius: 12px 12px 12px 12px;
+  width: fit-content;
+
+  .container-header {
+    padding: 24px;
+    color: rgba(0, 0, 0, 1);
+    // text-transform: none;
+
+    // line-break: auto;
+    // overflow-wrap: initial;
+    // white-space: pre;
+  }
+  .divider {
+    width: 100%;
+    height: 2px;
+    background-color: var(--bg-color-initial);
+  }
+  // .container-header ~ .container-content {
+  //   padding-top: 0;
+  // }
+  .container-content {
+    padding: 24px;
+  }
+}

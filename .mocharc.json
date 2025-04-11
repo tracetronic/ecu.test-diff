@@ -1,0 +1,6 @@
+{
+  "required": ["ts-node/register", "tsconfig-paths/register"],
+  "extension": ["ts", "js"],
+  "loader": "ts-node/esm",
+  "spec": ["./test/setup.ts", "./test/**/*.ts"]
+}

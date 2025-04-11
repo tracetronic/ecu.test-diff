@@ -1,0 +1,43 @@
+name: Test
+
+on:
+  workflow_call:
+    inputs:
+      node-version:
+        description: 'Node.js version to use for tests'
+        required: true
+        type: number
+    outputs:
+      test-result:
+        description: 'Test result'
+        value: ${{ jobs.test.outputs.result }}
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    outputs:
+      result: ${{ steps.test-result.outputs.result }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js ${{ inputs.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ inputs.node-version }}
+          cache: 'npm'
+          cache-dependency-path: 'package-lock.json'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint code
+        run: npm run lint
+
+      - name: Run tests
+        run: npm test
+
+      - name: Set test result
+        id: test-result
+        run: echo "result=$(if [ $? -eq 0 ]; then echo 'success'; else echo 'failure'; fi)" >> $GITHUB_OUTPUT

@@ -1,0 +1,90 @@
+@use 'common.scss';
+
+.container {
+  min-width: 600px;
+  font-size: 75%;
+
+  .content {
+    #file-list {
+      list-style-type: none;
+      padding: 0;
+      margin-bottom: 0;
+    }
+
+    .file-item {
+      margin-bottom: 5px;
+      padding-left: 25px;
+      line-height: 2;
+      position: relative;
+      display: flex;
+      align-items: center;
+      word-wrap: break-word;
+    }
+
+    .file-item::before {
+      content: counter(file-item-counter);
+      counter-increment: file-item-counter;
+      position: absolute;
+      padding-left: 5px;
+      left: 0;
+      font-weight: lighter;
+    }
+
+    .file-item.expanded {
+      background-color: var(--color-tt-salvia-25);
+      padding-bottom: 5px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .icon {
+      margin-right: 6px;
+    }
+    .renamedfrom {
+      font-size: smaller;
+      font-style: italic;
+      color: darkgrey;
+      line-height: 0.8;
+    }
+
+    .additions {
+      color: green;
+    }
+
+    .deletions {
+      color: red;
+    }
+
+    .file-info {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+    }
+
+    .filename {
+      flex-grow: 1;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .changes {
+      margin-left: 45px;
+    }
+
+    .diff-button {
+      cursor: pointer;
+      margin-top: 5px;
+    }
+    .download-button {
+      cursor: pointer;
+      margin-top: 5px;
+    }
+
+    .total-changes {
+      float: right;
+      padding-right: 5px;
+    }
+  }
+}

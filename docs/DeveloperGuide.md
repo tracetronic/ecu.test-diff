@@ -8,6 +8,7 @@
 - [Development Setup](#development-setup)
   - [Install dependencies](#install-dependencies)
 - [Build process](#build-process)
+- [Integration](#integration)
 - [Testing / Linting / Code formatting](#testing--linting--code-formatting)
   - [Prettier](#prettier)
   - [Linting](#linting)
@@ -22,19 +23,23 @@
 
 Please have a look at section 'Description' inside [README.md](..\README.md#description).
 
+
 ## Features
 
 Please have a look at section 'Features' inside [README.md](..\README.md#features).
 
+
 ## Fork information
 
 This project is based on the boilerplate [Chrome Extension Webpack](https://github.com/sszczep/chrome-extension-webpack) from Sebastian Szczepański.
+
 
 ## Prerequisites
 
 ### Install node.js
 
 First you have to install [node.js](https://nodejs.org/en/download) to have access to the package manager npm for building the browser extension.
+
 
 ## Development Setup
 
@@ -63,14 +68,16 @@ npm run build-firefox
 npm run start-chrome
 npm run build-chrome
 ```
+Your compiles files are available inside the `./dist` folder after the build process.
+  **<u>Note:</u>** Since the build folder is `./dist`, only the last build execution is present.
 
-Your compiles files are available inside the './dist' folder after the build process.
+## Integration
+
 For integration and testing into you browser you have to note some differences:
 
-In Chrome/Edge you can just select the './dist' folder inside you browser windows for importing the extension.
+In **Chrome/Edge** you can just select the `./dist` folder inside you browser windows for importing the extension.
 
-In Firefox you can test the extension only in debug-mode. You have to klick on 'debug add-ons' and can afterwards select a .zip file for the import. You can create the .zip file on your own or use the tool web-ext (from mozilla).
-
+In **Firefox** you can test the extension only in debug-mode. You have to klick on 'debug add-ons' and can afterwards select a .zip file for the import. You can create the .zip file on your own or use the tool web-ext (from mozilla). 
 ```
 npm install web-ext
 cd ./dist
@@ -111,18 +118,24 @@ npm run test
 
 All CI workflows are located in `.github/workflows`
 
-| name | on
-| output | artifacts |
-| :-------------------------------------- | :---------------------------------------------------------------- | :---------- | :----------------------- |
-| [build](../.github/workflows/build.yml) | <ul><li>push and pr to `main`</li><li>workflow dispatch</li></ul> | - | chrome and firefox build |
-| [test](../.github/workflows/test.yml) | reused by [build](../.github/workflows/build.yml) workflow | test result | - |
-| [reuse](../.github/workflows/reuse.yml) | <ul><li>push and pr to `main`</li><li>workflow dispatch</li></ul> | spdx sbom | sbom.spdx |
+| name                                      | on                                                                                                                                       | output      | artifacts                |
+| :---------------------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------- | :---------- | :----------------------- |
+| [deploy](../.github/workflows/deploy.yml) | <ul><li>tag</li><li>release published</li></ul>                                                                                          | -           | -                        |
+| [build](../.github/workflows/build.yml)   | <ul><li>push and pr to `main`</li><li>workflow dispatch</li><li>reused by [deploy](../.github/workflows/deploy.yml) workflow  </li></ul> | -           | chrome and firefox build |
+| [test](../.github/workflows/test.yml)     | reused by [build](../.github/workflows/build.yml) workflow                                                                               | test result | -                        |
+| [reuse](../.github/workflows/reuse.yml)   | <ul><li>push and pr to `main`</li><li>workflow dispatch</li></ul>                                                                        | spdx sbom   | sbom.spdx                |
+  
+Those workflows are running automatically after having some changes to the remote repository. 
+* `build` 
+  * provides its artifacts additionally after each execution
+    * firefox
+    * chrome
+* `deploy`
+  * Chrome
+    * a Google Chrome developer account is required
+    * any secrets that are neccessary for the publish process are set as `Actions secret`
+    * any additional information, see [Publish in the Chrome Web Store](https://developer.chrome.com/docs/webstore/publish)
 
-Those workflows are running automatically after pushing some changes to the remote repository. The
-build workflow provides its artifacts additionally after each execution.
-
-- firefox
-- chrome
 
 ## Open-Source Software compliance
 

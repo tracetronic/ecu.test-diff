@@ -33,7 +33,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        browser: ${{ fromJSON(env.PLATFORM) }}
+        browser: ${{ fromJSON(github.env.PLATFORM) }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4

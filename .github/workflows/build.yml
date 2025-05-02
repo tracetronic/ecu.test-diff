@@ -16,16 +16,7 @@ on:
         default: '["chrome", "firefox"]'
         type: string
 
-env:
-  env:
-  PLATFORM: ${{ (github.event_name == 'workflow_call' && inputs.browser != '') || '["chrome", "firefox"]' }}
-
 jobs:
-  setup:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Print environment variable
-        run: echo "platform environment is $PLATFORM"
   test:
     strategy:
       matrix:
@@ -39,7 +30,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        browser: ${{ fromJSON(github.env.PLATFORM) }}
+        browser: ${{ fromJSON(github.event.inputs.browser || '["chrome", "firefox"]') }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4

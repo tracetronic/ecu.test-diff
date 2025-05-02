@@ -17,14 +17,15 @@ on:
         type: string
 
 env:
-  PLATFORM: '["chrome", "firefox"]'
+  env:
+  PLATFORM: ${{ (github.event_name == 'workflow_call' && inputs.browser != '') || '["chrome", "firefox"]' }}
 
 jobs:
   setup:
     runs-on: ubuntu-latest
     steps:
-      - name: Set up environment variable
-        run: echo "PLATFORM=$([[ $GITHUB_EVENT_NAME == 'workflow_call' && -n ${{ inputs.browser }} ]] && echo '${{ inputs.browser }}' || echo '["chrome", "firefox"]')" >> $GITHUB_ENV
+      - name: Print environment variable
+        run: echo "platform environment is $PLATFORM
   test:
     strategy:
       matrix:

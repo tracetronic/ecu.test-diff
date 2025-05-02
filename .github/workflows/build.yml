@@ -17,9 +17,14 @@ on:
         type: string
 
 env:
-  PLATFORM: ${{ (github.event_name == 'workflow_call' && inputs.browser) || '["chrome", "firefox"]' }}
+  PLATFORM: '["chrome", "firefox"]'
 
 jobs:
+  setup:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up environment variable
+        run: echo "PLATFORM=$([[ $GITHUB_EVENT_NAME == 'workflow_call' && -n ${{ inputs.browser }} ]] && echo '${{ inputs.browser }}' || echo '["chrome", "firefox"]')" >> $GITHUB_ENV
   test:
     strategy:
       matrix:

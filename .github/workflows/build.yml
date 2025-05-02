@@ -25,7 +25,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Print environment variable
-        run: echo "platform environment is $PLATFORM
+        run: echo "platform environment is $PLATFORM"
   test:
     strategy:
       matrix:

@@ -84,11 +84,11 @@ cd ./dist
 web-ext build
 ```
 
-This tooling also provide a help in the ['signing' process](https://extensionworkshop.com/documentation/develop/extensions-and-the-add-on-id/) which is required for the use of add-ons without debug-mode in firefox.
+This tooling also provides a help in the ['signing process](https://extensionworkshop.com/documentation/develop/extensions-and-the-add-on-id/) which is required for the use of add-ons without debug-mode in firefox.
 
 ## Testing / Linting / Code formatting
 
-For these purposes there are three additional scripts which execute the local tests, start the linter in the source code and do some code formatting:
+For these purposes, there are three additional scripts that execute the local tests, start the linter in the source code and do some code formatting:
 
 ### Prettier
 
@@ -100,7 +100,7 @@ npm run prettier
 
 ### Linting
 
-Use the internal npm linter with the follwing command:
+Use the internal npm linter with the following command:
 
 ```bash
 npm run lint
@@ -133,10 +133,10 @@ Those workflows are running automatically after having some changes to the remot
 * `deploy`
   * Chrome
     * a Google Chrome developer account is required
-    * any secrets that are neccessary for the publish process are set as `Actions secret`
+    * any secrets that are necessary for the publication process are set as `Actions secret`
     * any additional information, see [Publish in the Chrome Web Store](https://developer.chrome.com/docs/webstore/publish)
     * after publishing the application, a review is mostly outstanding and has to be publish
-      manually afterwards
+      manually afterward
     * to automatically publish an application after the review, check "Publish '<application name>'
       automatically after it has passed review" when submitting to review
 

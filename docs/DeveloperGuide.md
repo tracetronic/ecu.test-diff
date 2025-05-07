@@ -21,12 +21,12 @@
 
 ## Description
 
-Please have a look at section 'Description' inside [README.md](..\README.md#description).
+Please have a look at section 'Description' inside [README.md](../README.md#description).
 
 
 ## Features
 
-Please have a look at section 'Features' inside [README.md](..\README.md#features).
+Please have a look at section 'Features' inside [README.md](../README.md#features).
 
 
 ## Fork information
@@ -135,6 +135,10 @@ Those workflows are running automatically after having some changes to the remot
     * a Google Chrome developer account is required
     * any secrets that are neccessary for the publish process are set as `Actions secret`
     * any additional information, see [Publish in the Chrome Web Store](https://developer.chrome.com/docs/webstore/publish)
+    * after publishing the application, a review is mostly outstanding and has to be publish
+      manually afterwards
+    * to automatically publish an application after the review, check "Publish '<application name>'
+      automatically after it has passed review" when submitting to review
 
 
 ## Open-Source Software compliance

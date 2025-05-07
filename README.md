@@ -70,8 +70,7 @@ You are good to go! You can also pin the extension to the toolbar for easy acces
 - ecu.test Diff-Viewer will be opened. This needs ecu.test installed and a valid license available!
 
 ### Documentation
-
-A detailed documentation on features, build and development setup can be found inside [docs folder](docs\DeveloperGuide.md).
+A detailed documentation on features, build and development setup can be found inside [docs folder](./docs/DeveloperGuide.md). 
 
 ### Contribution
 

@@ -8,3 +8,13 @@ path = ["**"]
 precedence = "aggregate"
 SPDX-FileCopyrightText = "2025 tracetronic GmbH"
 SPDX-License-Identifier = "MIT"
+
+[[annotations]]
+path = "**/MaterialSymbols*.woff2"
+SPDX-FileCopyrightText = "Apache License Version 2.0, January 2004 (see <https://www.apache.org/licenses/LICENSE-2.0.html>)"
+SPDX-License-Identifier = "Apache-2.0"
+
+[[annotations]]
+path = "**/red-hat-display-v14*"
+SPDX-FileCopyrightText = "Copyright 2021 Red Hat, Inc. (see <https://github.com/RedHatOfficial/RedHatFont/blob/master/LICENSE>)"
+SPDX-License-Identifier = "OFL-1.1"

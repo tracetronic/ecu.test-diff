@@ -46,8 +46,6 @@ module.exports = (env) => {
     plugins: [
       new DotenvPlugin(),
       new ESLintPlugin({
-        // eslintPath: require.resolve('eslint/use-at-your-own-risk'),
-        eslintPath: require.resolve('eslint'),
         extensions: ['js', 'ts'],
         overrideConfigFile: path.resolve(__dirname, '.eslintrc'),
       }),

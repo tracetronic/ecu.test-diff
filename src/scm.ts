@@ -94,6 +94,7 @@ abstract class BaseScmAdapter {
     let parsedUrl: URL;
     try {
       parsedUrl = new URL(url);
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
       throw new Error(`Not avalid URL: ${url}`);
     }
@@ -152,27 +153,27 @@ abstract class BaseScmAdapter {
     if (downloadId === undefined) throw new Error('Failed to start download');
 
     return new Promise((resolve, reject) => {
-      browser.downloads.onChanged.addListener(async function onChanged(
-        downloadDelta,
-      ) {
-        if (
-          downloadDelta.id === downloadId &&
-          downloadDelta.state &&
-          downloadDelta.state.current === 'complete'
-        ) {
-          const downloadItems = await browser.downloads.search({
-            id: downloadId,
-          });
+      browser.downloads.onChanged.addListener(
+        async function onChanged(downloadDelta) {
+          if (
+            downloadDelta.id === downloadId &&
+            downloadDelta.state &&
+            downloadDelta.state.current === 'complete'
+          ) {
+            const downloadItems = await browser.downloads.search({
+              id: downloadId,
+            });
 
-          if (downloadItems.length > 0) {
-            resolve(downloadItems[0].filename);
-          } else {
-            reject(new Error('Failed to retrieve download item'));
+            if (downloadItems.length > 0) {
+              resolve(downloadItems[0].filename);
+            } else {
+              reject(new Error('Failed to retrieve download item'));
+            }
+            browser.downloads.onChanged.removeListener(onChanged);
+            browser.downloads.erase({ id: downloadId });
           }
-          browser.downloads.onChanged.removeListener(onChanged);
-          browser.downloads.erase({ id: downloadId });
-        }
-      });
+        },
+      );
     });
   }
 

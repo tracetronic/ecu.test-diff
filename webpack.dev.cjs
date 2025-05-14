@@ -7,6 +7,6 @@ module.exports = (env) => {
     devtool: 'inline-source-map',
     devServer: {
       static: './dist',
-    }
+    },
   });
 };

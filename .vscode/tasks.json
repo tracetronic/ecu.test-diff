@@ -1,0 +1,12 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "type": "npm",
+      "script": "start-chrome",
+      "problemMatcher": [],
+      "label": "npm: start-chrome",
+      "detail": "webpack --env TARGET=chrome --watch --config webpack.dev.cjs"
+    }
+  ]
+}

@@ -1,4 +1,4 @@
-@import 'tt_iconfont.css';
+@import 'material_symbols.css';
 
 @font-face {
   font-family: 'Red Hat Display';
@@ -7,15 +7,6 @@
   font-display: block;
   src: url('../static/fonts/red-hat-display-v14-latin-regular.woff2')
     format('woff2');
-}
-
-/* icons */
-@font-face {
-  font-family: 'tt_iconfont';
-  font-style: normal;
-  font-weight: 400;
-  font-display: block;
-  src: url('../static/fonts/tt_iconfont.woff') format('woff');
 }
 
 @mixin font_readhat() {
@@ -121,10 +112,6 @@ button.button-50 {
 }
 button:hover {
   background-color: var(--bg-color-hover) !important;
-}
-img,
-.icon {
-  padding: 4px;
 }
 .rounded {
   border-radius: 50%;

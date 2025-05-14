@@ -172,19 +172,19 @@ function createHostRow(body: HTMLTableSectionElement, hostInfo: ScmHost) {
   tokenInput.id = `token`;
 
   tokenInput.value = hostInfo.token;
-  const imgShowPw = document.createElement('div');
-  imgShowPw.classList.add('icon', 'icon-tt-eye', 'clickable');
-  imgShowPw.style.cursor = 'pointer';
+
+  const imgShowPw = document.createElement('span');
+  imgShowPw.classList.add('material-symbols-outlined', 'clickable');
+  imgShowPw.style.verticalAlign = 'text-top';
+  imgShowPw.textContent = 'visibility';
+
   imgShowPw.style.paddingLeft = '4px';
   imgShowPw.addEventListener('click', () => {
-    console.log(imgShowPw.classList);
-    if (imgShowPw.classList.contains('icon-tt-eye')) {
-      imgShowPw.classList.remove('icon-tt-eye');
-      imgShowPw.classList.add('icon-tt-eye-disabled');
+    if (imgShowPw.textContent === 'visibility') {
+      imgShowPw.textContent = 'visibility_off';
       tokenInput.type = 'text';
     } else {
-      imgShowPw.classList.remove('icon-tt-eye-disabled');
-      imgShowPw.classList.add('icon-tt-eye');
+      imgShowPw.textContent = 'visibility';
       tokenInput.type = 'password';
     }
   });
@@ -192,9 +192,10 @@ function createHostRow(body: HTMLTableSectionElement, hostInfo: ScmHost) {
 
   // actions
   const actionCell = row.insertCell();
-  const delImg = document.createElement('div');
-  delImg.classList.add('icon', 'icon-tt-bin', 'clickable');
-  delImg.style.cursor = 'pointer';
+  const delImg = document.createElement('span');
+  delImg.classList.add('material-symbols-outlined', 'clickable');
+  delImg.style.verticalAlign = 'text-top';
+  delImg.textContent = 'delete';
   delImg.addEventListener('click', () => onRemoveHost(rowId));
   actionCell.append(delImg);
 

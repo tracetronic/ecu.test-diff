@@ -68,21 +68,24 @@ npm run build-firefox
 npm run start-chrome
 npm run build-chrome
 ```
-Your compiles files are available inside the `./dist` folder after the build process.
-  **<u>Note:</u>** Since the build folder is `./dist`, only the last build execution is present.
+
+Your compiled files are available inside the `./dist` folder after the build process.
+**<u>Note:</u>** Since the build folder is `./dist`, only the last build execution is present.
 
 ## Integration
 
-For integration and testing into you browser you have to note some differences:
+For integration and testing into your browser, you have to note some differences:
 
 In **Chrome/Edge** you can just select the `./dist` folder inside you browser windows for importing the extension.
 
-In **Firefox** you can test the extension only in debug-mode. You have to klick on 'debug add-ons' and can afterwards select a .zip file for the import. You can create the .zip file on your own or use the tool web-ext (from mozilla). 
+In **Firefox**, you can test the extension only in debug-mode. You have to klick on 'debug add-ons' and can afterwards select a .zip file for the import. You can create the .zip file on your own or use the tool web-ext (from mozilla).
+
 ```
 npm install web-ext
 cd ./dist
 web-ext build
 ```
+This tooling also provide a help in the ['signing' process](https://extensionworkshop.com/documentation/develop/extensions-and-the-add-on-id/) which is required for the use of add-ons without debug-mode in firefox.
 
 This tooling also provides a help in the ['signing process](https://extensionworkshop.com/documentation/develop/extensions-and-the-add-on-id/) which is required for the use of add-ons without debug-mode in firefox.
 

@@ -87,7 +87,7 @@ A detailed documentation on features, build and development setup can be found i
 ### Contribution
 
 At the moment, no external contributions are intended and merge requests from forks will automatically be rejected!
-To report a bug or request an enhancement to this plugin please raise a new [GitHub issue](https://github.com/tracetronic/ecu.test-diff/issues).
+To report a bug or request an enhancement to this plugin, please raise a new [GitHub issue](https://github.com/tracetronic/ecu.test-diff/issues).
 
 ### Support
 

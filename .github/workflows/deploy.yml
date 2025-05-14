@@ -63,10 +63,13 @@ jobs:
           cache: 'npm'
           cache-dependency-path: 'package-lock.json'
       - name: Install web-ext
-        if: matrix.browser == 'mozilla'
+        if: matrix.browser == 'firefox'
         run: npm install -g web-ext
       - name: Publish to Firefox Add-on
         if: ${{ matrix.browser == 'firefox' }}
+        env:
+          AMO_JWT_ISSUER: ${{ secrets.AMO_JWT_ISSUER }}
+          AMO_JWT_SECRET: ${{ secrets.AMO_JWT_SECRET }}
         run: |
           # extract artifact
           mkdir -p "./${{ matrix.browser }}-extension"
@@ -86,13 +89,10 @@ jobs:
 
           # sign the extension
           web-ext sign \
-            --api-key="${{ secrets.AMO_JWT_ISSUER }}" \
-            --api-secret="${{ secrets.AMO_JWT_SECRET }}" \
+            --api-key="$AMO_JWT_ISSUER" \
+            --api-secret="$AMO_JWT_SECRET" \
             --channel=listed \
             --source-dir="./${{ matrix.browser }}-extension"
-        env:
-          AMO_JWT_ISSUER: ${{ secrets.AMO_JWT_ISSUER }}
-          AMO_JWT_SECRET: ${{ secrets.AMO_JWT_SECRET }}
       - name: Publish to Chrome Web Store
         if: ${{ matrix.browser == 'chrome' }}
         uses: mnao305/chrome-extension-upload@v5.0.0

@@ -28,8 +28,7 @@ module.exports = (env) => {
               loader: 'sass-loader',
               options: {
                 api: 'modern-compiler',
-                sassOptions: {
-                },
+                sassOptions: {},
               },
             },
           ],

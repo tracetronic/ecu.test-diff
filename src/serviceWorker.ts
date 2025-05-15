@@ -1,4 +1,4 @@
-import { Browser } from 'webextension-polyfill';
+import browser from 'webextension-polyfill';
 import {
   Action,
   ErrorType,
@@ -8,8 +8,6 @@ import {
   ServiceWorkerRequest,
 } from './types';
 import { scmAdapters } from './scm';
-
-const browser: Browser = require('webextension-polyfill');
 
 browser.runtime.onMessage.addListener(async function (
   request: ServiceWorkerRequest,
@@ -69,6 +67,7 @@ async function getHosts(): Promise<ScmHost[]> {
   try {
     const data = JSON.parse(dataString.hosts ?? '[]');
     return data;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (error) {
     return [];
   }
@@ -106,9 +105,7 @@ async function fetchModifiedFiles(hostInfo: HostInfo) {
   if (token == null) throw new Error(ErrorType.TOKEN_NOT_SET);
 
   return await new scmAdapters[hostInfo.scm](hostInfo).fetchModifiedFiles(
-    (
-      await getActiveTab()
-    ).url,
+    (await getActiveTab()).url,
     token,
   );
 }

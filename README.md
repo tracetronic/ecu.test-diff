@@ -3,7 +3,7 @@
 - [Description](#description)
 - [Features](#features)
 - [Getting started](#getting-started)
-  - [Installing and running](#installing-and-running)
+  - [Installation](#installation)
   - [Usage](#usage)
   - [Documentation](#documentation)
   - [Contribution](#contribution)
@@ -14,7 +14,9 @@
 
 Browser plugin to open the diff viewer of tracetronic products ecu.test and trace.check from browser.
 
-ecu.test Diff Extension is a bridge between the current browser tab and an installed ecu.test. It allows you to diff packages (`.pkg`) and other artifacts from an open commit or merge request with only a few simple clicks.
+Ecu.test Diff Extension is a bridge between the current browser tab and an installed ecu.test.
+It allows you to diff packages (`.pkg`)
+and other artifacts from an open commit or merge request with only a few simple clicks.
 
 ## Features
 
@@ -36,17 +38,18 @@ Detected file extensions
 
 ## Getting started
 
-### Installing and running
+### Installation
 
-TODO: The extention is not yet released on chrome or firefox app stores!
-
-Use the extention in development mode (this mode is probably forbidden via company IT rules!):
+To install the extension, use the specific installation method for your browser.
 
 **Firefox**
 
-    1. Download the relevant .xpi file from releases.
-    2. Go to `about:debugging#/runtime/this-firefox`
-    3. Click on load temporary addon select the .xpi file.
+    1. Click extension icon in the top right corner or Go to "https://addons.mozilla.org" and continue with step 3
+    2. Click on the "Manage extensions" button
+    3. Click on "Find more add-ons" and type "Open with ecu.test diff"
+    4. Click on the "Add to Firefox" button
+    5. Click on "Add" in the pop-up dialog
+    6. Click on "OK" in the pop-up dialog (if needed)
 
 **Chrome/Edge**
 
@@ -64,17 +67,17 @@ You are good to go! You can also pin the extension to the toolbar for easy acces
 - Select the correct platform type and add the host
 - Go to the options e.g., via click on the cog-wheel icon
 - Now enter your API token
-  - ⚠️Don't give the token all permissions⚠️
+  - ⚠️Don not give the token all permissions⚠️
   - Only reading repository and API access
   - fine-grained tokens are recommended
 
-<img src="./docs/images/chrome/configuration.png" alt="Configuration" width="800"/>
+<img src="./docs/images/firefox/configuration.png" alt="Configuration" width="800"/>
 
 - Save the settings
 - Go back to the commit page and open the popup again
 - The supported files of the changes will be listed
 
-<img src="./docs/images/chrome/dialog.png" alt="Configuration" width="600"/>
+<img src="./docs/images/firefox/dialog.png" alt="Configuration" width="600"/>
 
 - Click on a file and click on "Show diff"
 - ecu.test Diff-Viewer will be opened
@@ -82,7 +85,7 @@ You are good to go! You can also pin the extension to the toolbar for easy acces
 
 ### Documentation
 
-A detailed documentation on features, build and development setup can be found inside [docs folder](./docs/DeveloperGuide.md).
+For detailed documentation on features, build and development setup, see the [DeveloperGuide](./docs/DeveloperGuide.md).
 
 ### Contribution
 
@@ -101,7 +104,7 @@ This project uses the [Red Hat Display Text Font](https://github.com/RedHatOffic
 
 This project uses the [Material Symbols Outlined Font](https://fonts.google.com/icons) with is licensed under Apache License Version 2.0 (see [Apache-2.0.txt](./LICENSES/Apache-2.0.txt))
 
-To generate a software bill of material (sbom) we recommend using the [cyclondx](https://github.com/CycloneDX/cyclonedx-node-npm) tool:
+To generate a software bill of material (sbom), we recommend using the [CycloneDX](https://github.com/CycloneDX/cyclonedx-node-npm) tool:
 
 ```bash
 #skip if you have cyclonedx already installed globally

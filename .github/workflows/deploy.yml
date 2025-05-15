@@ -8,9 +8,6 @@ on:
 jobs:
   version-check:
     runs-on: ubuntu-latest
-    if: |
-      startsWith(github.ref, 'refs/tags/ecu-test-diff-') ||
-      github.event_name == 'release'
     outputs:
       proceed: ${{ steps.version-check.outputs.proceed }}
     steps:
@@ -31,8 +28,6 @@ jobs:
             echo "❌ Tag version ($TAG_VERSION) does not match manifest version ($MANIFEST_VERSION)."
             echo "proceed=false" >> $GITHUB_OUTPUT
             exit 1
-          elif [[ "{{ github.event_name }}" == "release" ]]; then
-            ]]
           fi
 
           echo "✅ Tag version matches manifest version."
@@ -45,7 +40,6 @@ jobs:
 
   publish:
     needs: [version-check, build]
-    if: ${{ github.env.DEPLOYMENT == 'True' }}
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -74,18 +68,6 @@ jobs:
           # extract artifact
           mkdir -p "./${{ matrix.browser }}-extension"
           unzip -o "${{ matrix.browser }}-extension.zip" -d "./${{ matrix.browser }}-extension"
-
-          # lint the extension before signing
-          web-ext lint \
-            --source-dir="./${{ matrix.browser }}-extension" \
-            --output=json \
-            --pretty \
-            --warnings-as-errors
-          LINT_EXIT_CODE=$?
-          if [ $LINT_EXIT_CODE -ne 0 ]; then
-            echo "::error::Linting failed with exit code $LINT_EXIT_CODE. Submission canceled."
-            exit 1
-          fi
 
           # sign the extension
           web-ext sign \

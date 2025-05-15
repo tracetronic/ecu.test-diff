@@ -50,24 +50,35 @@ Use the extention in development mode (this mode is probably forbidden via compa
 
 **Chrome/Edge**
 
-    1. Download the relevant .crx file from releases.
-    2. Go to `chrome://extensions/`
-    3. Enable development mode
-    4. Drag .crx into the window (if it is not working, reload window once)
+    1. Click extension icon in the top right corner or Go to "https://chromewebstore.google.com/" and continue with step 4
+    2. Click on the "Manage extensions" button
+    3. Click on "Chrome Web Store"
+    4. Search for "Open with ecu.test diff" and select the found extension
+    5. Click on "Add to Chrome"
 
 You are good to go! You can also pin the extension to the toolbar for easy access.
 
 ### Usage
 
-- Open a commit or merge request on your SCM platform. Open the extention popup dialog.
-- Select the correct platform type and add the host.
-- Go to the options. E.g., via click on the cog wheel icon.
-- Now enter you API token. Don't give the token all permissions! Only reading repository and API access. So create fine-grained tokens!
+- Open a commit or merge request on your SCM platform. Open the extension popup dialog
+- Select the correct platform type and add the host
+- Go to the options e.g., via click on the cog-wheel icon
+- Now enter your API token
+  - ⚠️Don't give the token all permissions⚠️
+  - Only reading repository and API access
+  - fine-grained tokens are recommended
+
+<img src="./docs/images/chrome/configuration.png" alt="Configuration" width="800"/>
+
 - Save the settings
-- Go back to the commit page and open the popup again.
-- The supported files of the changes will be listed.
-- Click on a file and click on "Show diff".
-- ecu.test Diff-Viewer will be opened. This needs ecu.test installed and a valid license available!
+- Go back to the commit page and open the popup again
+- The supported files of the changes will be listed
+
+<img src="./docs/images/chrome/dialog.png" alt="Configuration" width="600"/>
+
+- Click on a file and click on "Show diff"
+- ecu.test Diff-Viewer will be opened
+  - ⚠️This needs ecu.test installed and a valid license available⚠️
 
 ### Documentation
 

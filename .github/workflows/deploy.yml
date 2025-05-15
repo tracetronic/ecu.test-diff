@@ -1,12 +1,45 @@
 name: Deploy Browser Extension
 
 on:
+  workflow_dispatch:
+    inputs:
+        browser:
+            description: Browser platform to build for as an array (e.g., '["chrome"]", '["firefox", "chrome"]')
+            required: false
+            default: '["chrome", "firefox"]'
+            type: string
+        tag:
+            description: Tag to deploy (e.g., "ecu-test-diff-1.0.0")
+            required: true
+            type: string
   push:
     tags:
       - 'ecu-test-diff-[0-9]+.[0-9]+.[0-9]+'
 
 jobs:
+  setup:
+    runs-on: ubuntu-latest
+    outputs:
+        tag-version: ${{ steps.set-tag.outputs.tag-version }}
+    steps:
+      - name: Set tag
+        id: set-tag
+        run: |
+          # determine if the workflow was triggered by a dispatch event or a tag push, and set the tag version accordingly
+            if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+                TAG_VERSION="${{ github.event.inputs.tag }}"
+                # validate tag version
+                if [[ ! $TAG_VERSION =~ ^ecu-test-diff-[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+                    echo "❌ Invalid tag version format. Expected format: ecu-test-diff-x.y.z"
+                    exit 1
+                fi
+                echo "tag-version=$TAG_VERSION" >> $GITHUB_OUTPUT
+            else
+                TAG_VERSION="${GITHUB_REF#refs/tags/}"
+                echo "tag-version=$TAG_VERSION" >> $GITHUB_OUTPUT
+            fi
   version-check:
+    needs: set-tag
     runs-on: ubuntu-latest
     outputs:
       proceed: ${{ steps.version-check.outputs.proceed }}
@@ -18,12 +51,13 @@ jobs:
           sudo apt-get update -y
           sudo apt-get install -y jq
 
-          # Tag ref of release refs/tags/<tag_name> as well
-          TAG_VERSION="${GITHUB_REF#refs/tags/ecu-test-diff-}"
+          TAG_VERSION="${{ needs.setup.outputs.tag-version }}"
           MANIFEST_VERSION=$(jq -r '.version' static/manifest.json)
           echo "Tag version: $TAG_VERSION"
           echo "Manifest version: $MANIFEST_VERSION"
-
+          
+          # extract the version from the tag
+          TAG_VERSION=${TAG_VERSION#ecu-test-diff-}
           if [ "$TAG_VERSION" != "$MANIFEST_VERSION" ]; then
             echo "❌ Tag version ($TAG_VERSION) does not match manifest version ($MANIFEST_VERSION)."
             echo "proceed=false" >> $GITHUB_OUTPUT
@@ -37,13 +71,15 @@ jobs:
     needs: version-check
     if: needs.version-check.outputs.proceed == 'true'
     uses: ./.github/workflows/build.yml
+    with:
+      browser: ${{ fromJSON(github.event.inputs.browser || '["chrome", "firefox"]') }}
 
   publish:
     needs: [version-check, build]
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        browser: ['chrome', 'firefox']
+        browser: ${{ fromJSON(github.event.inputs.browser || '["chrome", "firefox"]') }}
     steps:
       - name: Get artifact from build job
         uses: actions/download-artifact@v4
@@ -59,7 +95,7 @@ jobs:
       - name: Install web-ext
         if: matrix.browser == 'firefox'
         run: npm install -g web-ext
-      - name: Publish to Firefox Add-on
+      - name: Publish as Firefox add-on
         if: ${{ matrix.browser == 'firefox' }}
         env:
           AMO_JWT_ISSUER: ${{ secrets.AMO_JWT_ISSUER }}

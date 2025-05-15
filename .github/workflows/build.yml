@@ -8,6 +8,13 @@ on:
     branches:
       - main
   workflow_dispatch:
+  workflow_call:
+    inputs:
+      browser:
+        description: Browser platform to build for (e.g., "chrome", '["firefox", "chrome"]')
+        required: false
+        default: '["chrome", "firefox"]'
+        type: string
 
 jobs:
   test:
@@ -23,8 +30,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        browser: [chrome, firefox]
-
+        browser: ${{ fromJSON(github.event.inputs.browser || '["chrome", "firefox"]') }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4

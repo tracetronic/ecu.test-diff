@@ -23,23 +23,19 @@
 
 Please have a look at section 'Description' inside [README.md](../README.md#description).
 
-
 ## Features
 
 Please have a look at section 'Features' inside [README.md](../README.md#features).
 
-
 ## Fork information
 
 This project is based on the boilerplate [Chrome Extension Webpack](https://github.com/sszczep/chrome-extension-webpack) from Sebastian Szczepański.
-
 
 ## Prerequisites
 
 ### Install node.js
 
 First, you have to install [node.js](https://nodejs.org/en/download) to have access to the package manager npm for building the browser extension.
-
 
 ## Development Setup
 
@@ -87,6 +83,7 @@ npm install web-ext
 cd ./dist
 web-ext build
 ```
+
 This tooling also provides help in the ['signing process](https://extensionworkshop.com/documentation/develop/extensions-and-the-add-on-id/)
 which is required for the use of add-ons without a debug-mode in firefox.
 
@@ -96,7 +93,7 @@ For these purposes, there are three additional scripts that execute the local te
 
 ### Prettier
 
-Prettier is a code formatter that enforces a consistent style by parsing your code and re-printing it. 
+Prettier is a code formatter that enforces a consistent style by parsing your code and re-printing it.
 Select the files you want to format and run the following command:
 
 ```bash
@@ -131,28 +128,28 @@ npm run test
 
 All CI workflows are located in `.github/workflows`
 
-| name                                      | on                                                                                                                                       | output      | artifacts                |
-|:------------------------------------------|:-----------------------------------------------------------------------------------------------------------------------------------------|:------------|:-------------------------|
-| [deploy](../.github/workflows/deploy.yml) | tag                                                                                                                                      | -           | -                        |
-| [build](../.github/workflows/build.yml)   | <ul><li>push and pr to `main`</li><li>workflow dispatch</li><li>reused by [deploy](../.github/workflows/deploy.yml) workflow  </li></ul> | -           | chrome and firefox build |
-| [test](../.github/workflows/test.yml)     | reused by [build](../.github/workflows/build.yml) workflow                                                                               | test result | -                        |
-| [reuse](../.github/workflows/reuse.yml)   | <ul><li>push and pr to `main`</li><li>workflow dispatch</li></ul>                                                                        | spdx sbom   | sbom.spdx                |
-  
-Those workflows are running automatically after having some changes to the remote repository. 
-* `build` 
-  * provides its artifacts additionally after each execution
-    * firefox
-    * chrome
-* `deploy`
-  * Chrome
-    * a Google Chrome developer account is required
-    * any secrets that are necessary for the publication process are set as `Actions secret`
-    * any additional information, see [Publish in the Chrome Web Store](https://developer.chrome.com/docs/webstore/publish)
-    * after publishing the application, a review is mostly outstanding and has to be published
-      manually afterward
-    * to automatically publish an application after the review, check "Publish '<application name>'
-      automatically after it has passed review" when submitting to review
+| name                                      | on                                                                                                                                      | output      | artifacts                |
+| :---------------------------------------- | :-------------------------------------------------------------------------------------------------------------------------------------- | :---------- | :----------------------- |
+| [deploy](../.github/workflows/deploy.yml) | tag                                                                                                                                     | -           | -                        |
+| [build](../.github/workflows/build.yml)   | <ul><li>push and pr to `main`</li><li>workflow dispatch</li><li>reused by [deploy](../.github/workflows/deploy.yml) workflow </li></ul> | -           | chrome and firefox build |
+| [test](../.github/workflows/test.yml)     | reused by [build](../.github/workflows/build.yml) workflow                                                                              | test result | -                        |
+| [reuse](../.github/workflows/reuse.yml)   | <ul><li>push and pr to `main`</li><li>workflow dispatch</li></ul>                                                                       | spdx sbom   | sbom.spdx                |
 
+Those workflows are running automatically after having some changes to the remote repository.
+
+- `build`
+  - provides its artifacts additionally after each execution
+    - firefox
+    - chrome
+- `deploy`
+  - Chrome
+    - a Google Chrome developer account is required
+    - any secrets that are necessary for the publication process are set as `Actions secret`
+    - any additional information, see [Publish in the Chrome Web Store](https://developer.chrome.com/docs/webstore/publish)
+    - after publishing the application, a review is mostly outstanding and has to be published
+      manually afterward
+    - to automatically publish an application after the review, check "Publish '<application name>'
+      automatically after it has passed review" when submitting to review
 
 ## Open-Source Software compliance
 

@@ -3,12 +3,13 @@
   "version": "1.0.0",
   "description": "Browser plugin to open the diff viewer of tracetronic products ecu.test and trace.check from browser",
   "scripts": {
-    "start-chrome": "webpack --env TARGET=chrome --watch --config webpack.dev.cjs",
-    "start-firefox": "webpack --env TARGET=firefox --watch --config webpack.dev.cjs",
-    "build-chrome": "webpack --env TARGET=chrome --config webpack.prod.cjs",
-    "build-firefox": "webpack --env TARGET=firefox --config webpack.prod.cjs",
+    "start:chrome": "webpack --env TARGET=chrome --watch --config webpack.dev.cjs",
+    "start:firefox": "webpack --env TARGET=firefox --watch --config webpack.dev.cjs",
+    "build:chrome": "webpack --env TARGET=chrome --config webpack.prod.cjs",
+    "build:firefox": "webpack --env TARGET=firefox --config webpack.prod.cjs",
     "lint": "eslint --ext .ts,.js --max-warnings=0 .",
-    "prettier": "prettier --write",
+    "prettier:write": "prettier --write",
+    "prettier:check": "prettier --check .",
     "test": "c8 mocha --require ts-node/register ./test/setup.ts ./test/**/*.ts"
   },
   "type": "module",

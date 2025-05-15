@@ -55,7 +55,7 @@ jobs:
 
           # lint the extension before signing
           web-ext lint \
-            --source-dir="./dist \
+            --source-dir="./dist" \
             --output=json \
             --pretty \
             --warnings-as-errors

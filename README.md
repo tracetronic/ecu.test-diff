@@ -12,7 +12,7 @@
 
 ## Description
 
-Browser plugin to open the diff viewer of tracetronic products ecu.test and trace.check from browser.
+Browser extension to open the diff viewer of tracetronic products ecu.test and trace.check from browser.
 
 Ecu.test Diff Extension is a bridge between the current browser tab and an installed ecu.test.
 It allows you to diff packages (`.pkg`)
@@ -90,7 +90,8 @@ For detailed documentation on features, build and development setup, see the [De
 ### Contribution
 
 At the moment, no external contributions are intended and merge requests from forks will automatically be rejected!
-To report a bug or request an enhancement to this plugin, please raise a new [GitHub issue](https://github.com/tracetronic/ecu.test-diff/issues).
+To report a bug or request an enhancement to this extension,
+please raise a new [GitHub issue](https://github.com/tracetronic/ecu.test-diff/issues).
 
 ### Support
 

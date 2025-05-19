@@ -84,7 +84,7 @@ cd ./dist
 web-ext build
 ```
 
-This tooling also provides help in the ['signing process](https://extensionworkshop.com/documentation/develop/extensions-and-the-add-on-id/)
+This tooling also provides help in the [signing process](https://extensionworkshop.com/documentation/develop/extensions-and-the-add-on-id/)
 which is required for the use of add-ons without a debug-mode in firefox.
 
 ## Testing / Linting / Code formatting

@@ -1,5 +1,5 @@
 version = 1
-SPDX-PackageName = "ecu.test diff plugin"
+SPDX-PackageName = "ecu.test diff extension"
 SPDX-PackageSupplier = "2025 tracetronic GmbH <info@tracetronic.de>"
 SPDX-PackageDownloadLocation = "https://github.com/tracetronic/ecu.test-diff"
 

@@ -4,6 +4,11 @@
   "description": "Extension to open the ecu.test/trace.check diff viewer on GitHub/GitLab.",
   "version": "0.2.0",
   "background": {},
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "open-with-ecu-test-diff@tracetronic.com"
+    }
+  },
   "permissions": ["storage", "activeTab", "downloads"],
   "options_ui": {
     "page": "options.html",

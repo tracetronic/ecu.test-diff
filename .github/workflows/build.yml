@@ -46,7 +46,24 @@ jobs:
         run: npm ci
 
       - name: Build extension for ${{ matrix.browser }}
-        run: npm run build-${{ matrix.browser }}
+        run: npm run build:${{ matrix.browser }}
+
+      - name: Validate build result
+        if: ${{ matrix.browser == 'firefox' }}
+        run: |
+          npm install -g web-ext
+
+          # lint the extension before signing
+          web-ext lint \
+            --source-dir="./dist" \
+            --output=json \
+            --pretty \
+            --warnings-as-errors
+          LINT_EXIT_CODE=$?
+          if [ $LINT_EXIT_CODE -ne 0 ]; then
+            echo "::error::Linting failed with exit code $LINT_EXIT_CODE. Build validation for Firefox failed."
+            exit 1
+          fi
 
       - name: Upload extension zip
         uses: actions/upload-artifact@v4

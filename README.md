@@ -67,9 +67,23 @@ You are good to go! You can also pin the extension to the toolbar for easy acces
 - Select the correct platform type and add the host
 - Go to the options e.g., via click on the cog-wheel icon
 - Now enter your API token
-  - ⚠️Don not give the token all permissions⚠️
-  - Only reading repository and API access
-  - fine-grained tokens are recommended
+  - ⚠️Don\'t give the token all permissions, use fine-grained tokens ⚠️
+  - Only reading repository comitts and pull requests and API access
+  <details>
+
+    <summary >How to create an API token with <b>required minimal access</b></summary>
+
+    - GitHub
+      1. Go to your profile settings
+      2. Go to `Developer Settings`
+      3. Select `Personal access tokens` - `Fine-grained tokens`
+      4. Select `Generate new token`
+      5. Set `Repository access` as desired. If you give access to non-public repositories, make sure to grant `Repository permissions` for `Content` (read-only) and `Pull requests` (read-only)
+    - GitLab
+      1. Go to `Settings` - `Access tokens` in the relevant group or repository
+      2. Select `Add new token`
+      3. Set **Scope** to `read_api`, select a **Role** that is allowed to access code and changes!
+    </details>
 
 <img src="./docs/images/firefox/configuration.png" alt="Configuration" width="800"/>
 

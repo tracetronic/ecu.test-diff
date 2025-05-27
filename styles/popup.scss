@@ -45,7 +45,7 @@
       font-size: smaller;
       font-style: italic;
       color: darkgrey;
-      line-height: 0.8;
+      line-height: 0.9;
     }
 
     .additions {
@@ -67,6 +67,7 @@
       flex-grow: 1;
       overflow: hidden;
       text-overflow: ellipsis;
+      line-height: 1.4;
     }
 
     .changes {

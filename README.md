@@ -111,7 +111,6 @@ You are good to go! You can also pin the extension to the toolbar for easy acces
 
 <img src="./docs/images/firefox/diff_viewer.png" alt="Diff Viewer" width="800"/>
 
-
 ### Documentation
 
 For detailed documentation on features, build and development setup, see the [DeveloperGuide](./docs/DeveloperGuide.md).

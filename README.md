@@ -1,4 +1,10 @@
 # ecu.test Diff Extension <!-- omit in toc -->
+![Chrome Web Store Version](https://img.shields.io/chrome-web-store/v/dpplpkgobhppfnfnfkpinlhognmaphnl?style=flat&logo=googlechrome&logoColor=%23FFFF&logoSize=auto&color=%234285F4&link=https%3A%2F%2Fchromewebstore.google.com%2Fdetail%2Fopen-with-ecutest-diff%2Fdpplpkgobhppfnfnfkpinlhognmaphnl)
+![Mozilla Add-on Version](https://img.shields.io/amo/v/open-with-ecu-test-diff?style=flat&logo=firefoxbrowser&logoColor=%23FFFF&logoSize=auto&color=%23FF7139&link=https%3A%2F%2Faddons.mozilla.org%2Fen-US%2Ffirefox%2Faddon%2Fopen-with-ecu-test-diff%2F)
+[![REUSE Compliance Check](https://github.com/tracetronic/ecu.test-diff/actions/workflows/reuse.yml/badge.svg)](https://github.com/tracetronic/ecu.test-diff/actions/workflows/reuse.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/tracetronic/ecu.test-diff/blob/main/LICENSE)
+
+
 
 - [Description](#description)
 - [Features](#features)

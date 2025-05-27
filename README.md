@@ -82,7 +82,7 @@ You are good to go! You can also pin the extension to the toolbar for easy acces
     - GitLab
       1. Go to `Settings` - `Access tokens` in the relevant group or repository
       2. Select `Add new token`
-      3. Set **Scope** to `read_api`, select a **Role** that is allowed to access code and changes!
+      3. Set **Scope** to `read_api`, select a **Role** that is allowed to access code and changes
     </details>
 
 <img src="./docs/images/firefox/configuration.png" alt="Configuration" width="800"/>

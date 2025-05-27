@@ -289,7 +289,7 @@ abstract class BaseScmAdapter {
       file.download[what],
       file.download.type,
       file.filename,
-      what == 'old' ? file.filenameOld : `${this.calcShortHash(sha)}.${what}`,
+      `.${this.calcShortHash(sha)}.${what}`,
       token,
       sha,
     );

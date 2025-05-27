@@ -1,10 +1,9 @@
 # ecu.test Diff Extension <!-- omit in toc -->
+
 ![Chrome Web Store Version](https://img.shields.io/chrome-web-store/v/dpplpkgobhppfnfnfkpinlhognmaphnl?style=flat&logo=googlechrome&logoColor=%23FFFF&logoSize=auto&color=%234285F4&link=https%3A%2F%2Fchromewebstore.google.com%2Fdetail%2Fopen-with-ecutest-diff%2Fdpplpkgobhppfnfnfkpinlhognmaphnl)
 ![Mozilla Add-on Version](https://img.shields.io/amo/v/open-with-ecu-test-diff?style=flat&logo=firefoxbrowser&logoColor=%23FFFF&logoSize=auto&color=%23FF7139&link=https%3A%2F%2Faddons.mozilla.org%2Fen-US%2Ffirefox%2Faddon%2Fopen-with-ecu-test-diff%2F)
 [![REUSE Compliance Check](https://github.com/tracetronic/ecu.test-diff/actions/workflows/reuse.yml/badge.svg)](https://github.com/tracetronic/ecu.test-diff/actions/workflows/reuse.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/tracetronic/ecu.test-diff/blob/main/LICENSE)
-
-
 
 - [Description](#description)
 - [Features](#features)
@@ -73,11 +72,12 @@ You are good to go! You can also pin the extension to the toolbar for easy acces
 - Select the correct platform type and add the host
 - Go to the options e.g., via click on the cog-wheel icon
 - Now enter your API token
+
   - ⚠️Don\'t give the token all permissions, use fine-grained tokens ⚠️
   - Only reading repository commits and pull requests and API access
-  <details>
+    <details>
 
-    <summary >How to create an API token with <b>required minimal access</b></summary>
+      <summary >How to create an API token with <b>required minimal access</b></summary>
 
     - GitHub
       1. Go to your profile settings
@@ -89,7 +89,7 @@ You are good to go! You can also pin the extension to the toolbar for easy acces
       1. Go to `Settings` - `Access tokens` in the relevant group or repository
       2. Select `Add new token`
       3. Set **Scope** to `read_api`, select a **Role** that is allowed to access code and changes
-    </details>
+      </details>
 
 <img src="./docs/images/firefox/configuration.png" alt="Configuration" width="800"/>
 

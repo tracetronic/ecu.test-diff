@@ -3,15 +3,15 @@ name: Deploy Browser Extension
 on:
   workflow_dispatch:
     inputs:
-        browser:
-            description: Browser platform to build for as an array (e.g., '["chrome"]", '["firefox", "chrome"]')
-            required: false
-            default: '["chrome", "firefox"]'
-            type: string
-        tag:
-            description: Tag to deploy (e.g., "ecu-test-diff-1.0.0")
-            required: true
-            type: string
+      browser:
+        description: Browser platform to build for as an array (e.g., '["chrome"]", '["firefox", "chrome"]')
+        required: false
+        default: '["chrome", "firefox"]'
+        type: string
+      tag:
+        description: Tag to deploy (e.g., "ecu-test-diff-1.0.0")
+        required: true
+        type: string
   push:
     tags:
       - 'ecu-test-diff-[0-9]+.[0-9]+.[0-9]+'
@@ -20,7 +20,7 @@ jobs:
   setup:
     runs-on: ubuntu-latest
     outputs:
-        tag-version: ${{ steps.set-tag.outputs.tag-version }}
+      tag-version: ${{ steps.set-tag.outputs.tag-version }}
     steps:
       - name: Set tag
         id: set-tag
@@ -55,7 +55,14 @@ jobs:
           MANIFEST_VERSION=$(jq -r '.version' static/manifest.json)
           echo "Tag version: $TAG_VERSION"
           echo "Manifest version: $MANIFEST_VERSION"
-          
+
+          # check for beta versions first
+          if [[ "$MANIFEST_VERSION" == *-beta* ]]; then
+            echo "❌ Release workflow is not supported for beta versions. Manifest version ($MANIFEST_VERSION) is not ready for publishing."
+            echo "proceed=false" >> $GITHUB_OUTPUT
+            exit 1
+          fi
+
           # extract the version from the tag
           TAG_VERSION=${TAG_VERSION#ecu-test-diff-}
           if [ "$TAG_VERSION" != "$MANIFEST_VERSION" ]; then

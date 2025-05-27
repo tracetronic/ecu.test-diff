@@ -68,7 +68,7 @@ You are good to go! You can also pin the extension to the toolbar for easy acces
 - Go to the options e.g., via click on the cog-wheel icon
 - Now enter your API token
   - ⚠️Don\'t give the token all permissions, use fine-grained tokens ⚠️
-  - Only reading repository comitts and pull requests and API access
+  - Only reading repository commits and pull requests and API access
   <details>
 
     <summary >How to create an API token with <b>required minimal access</b></summary>

@@ -257,6 +257,7 @@ function createDownloadButtons(file: ModifiedFile) {
   if (file.new || !file.deleted) {
     const btn = document.createElement('button');
     btn.classList.add('download-button', 'button-50');
+    btn.style.marginRight = '5px';
     btn.textContent = 'Show new';
     btn.addEventListener('click', () => onDownload(file, 'new'));
     buttons.push(btn);

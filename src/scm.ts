@@ -177,6 +177,10 @@ abstract class BaseScmAdapter {
     });
   }
 
+  private calcShortHash(sha: string): string {
+    return sha.substring(0, 8);
+  }
+
   private async doDownloadFile(
     url: string,
     type: 'raw' | 'json',
@@ -245,12 +249,15 @@ abstract class BaseScmAdapter {
         file.download.old,
         file.download.type,
         file.filename,
-        '_old',
+        `.${this.calcShortHash(file.shaOld)}.old`,
         token,
         file.shaOld,
       );
     } else {
-      oldFile = await this.downloadDummy(file.filename, '_old');
+      oldFile = await this.downloadDummy(
+        file.filename,
+        `.${this.calcShortHash(file.shaOld)}.old`,
+      );
     }
 
     let newFile = '';
@@ -259,12 +266,15 @@ abstract class BaseScmAdapter {
         file.download.new,
         file.download.type,
         file.filename,
-        '_new',
+        `.${this.calcShortHash(file.shaNew)}.new`,
         token,
         file.shaNew,
       );
     } else {
-      newFile = await this.downloadDummy(file.filename, '_new');
+      newFile = await this.downloadDummy(
+        file.filename,
+        `.${this.calcShortHash(file.shaNew)}.new`,
+      );
     }
 
     const protocolUrl = encodeURI(
@@ -274,13 +284,14 @@ abstract class BaseScmAdapter {
   }
 
   async downloadFile(file: ModifiedFile, what: 'old' | 'new', token: string) {
+    const sha = what == 'old' ? file.shaOld : file.shaNew;
     const theFile = await this.doDownloadFile(
       file.download[what],
       file.download.type,
       file.filename,
-      what == 'old' ? file.filenameOld : '_' + what,
+      what == 'old' ? file.filenameOld : `${this.calcShortHash(sha)}.${what}`,
       token,
-      what == 'old' ? file.shaOld : file.shaNew,
+      sha,
     );
     const protocolUrl = encodeURI(`tracetronic:///${theFile}`);
     await browser.tabs.update({ url: protocolUrl });

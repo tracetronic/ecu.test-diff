@@ -91,9 +91,7 @@ You are good to go! You can also pin the extension to the toolbar for easy acces
       3. Set **Scope** to `read_api`, select a **Role** that is allowed to access code and changes
       </details>
 
-<div style="width:920px;height:517.5px;overflow:hidden;position:relative;display:flex;justify-content:flex-start;align-items:flex-start;">
-  <img src="./docs/images/chrome/configuration.png" alt="Configuration" style="width:1200px;height:563px;object-fit:none;object-position:top left;"/>
-</div>
+<img src="./docs/images/firefox/configuration.png" alt="Configuration" width=800/>
 
 - Save the settings
 - Go back to the commit page and open the popup again
@@ -101,17 +99,17 @@ You are good to go! You can also pin the extension to the toolbar for easy acces
 - Files that cannot be diffed with the ecu.test Diff-Viewer can still be opened individually for both the old and new versions
 - Click on a file and click on "Show new" or "Show old"
 
-<img src="./docs/images/chrome/dialog_download.png" alt="Configuration Download" width="600"/>
+<img src="./docs/images/firefox/dialog_download.png" alt="Configuration Download" width="600"/>
 
 - Files supported by the ecu.test Diff-Viewer will open directly in the viewer
 - Click on a file and click on "Show diff"
 
-<img src="./docs/images/chrome/dialog.png" alt="Configuration" width="600"/>
+<img src="./docs/images/firefox/dialog.png" alt="Configuration" width="600"/>
 
 - ecu.test Diff-Viewer will be opened
   - ⚠️This needs ecu.test installed and a valid license available⚠️
 
-<img src="./docs/images/chrome/diff_viewer.png" alt="Diff Viewer" width="800"/>
+<img src="./docs/images/firefox/diff_viewer.png" alt="Diff Viewer" width="800"/>
 
 
 ### Documentation

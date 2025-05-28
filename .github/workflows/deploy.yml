@@ -42,7 +42,11 @@ jobs:
       - name: Set browsers
         id: set-browsers
         run: |
-          BROWSERS='${{ github.event.inputs.browser || '["chrome", "firefox"]' }}'
+          |
+          BROWSERS="${{ github.event.inputs.browser }}"
+          if [ -z "$BROWSERS" ]; then
+            BROWSERS='["chrome", "firefox"]'
+          fi
           echo "browsers=$BROWSERS" >> $GITHUB_OUTPUT
 
   version-check:

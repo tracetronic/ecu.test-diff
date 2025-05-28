@@ -10,10 +10,10 @@
 - [Getting started](#getting-started)
   - [Installation](#installation)
   - [Usage](#usage)
-  - [Documentation](#documentation)
-  - [Contribution](#contribution)
-  - [Support](#support)
-  - [Licensing](#licensing)
+- [Documentation](#documentation)
+- [Contribution](#contribution)
+- [Support](#support)
+- [Licensing](#licensing)
 
 ## Description
 
@@ -111,21 +111,21 @@ You are good to go! You can also pin the extension to the toolbar for easy acces
 
 <img src="./docs/images/firefox/diff_viewer.png" alt="Diff Viewer" width="800"/>
 
-### Documentation
+## Documentation
 
 For detailed documentation on features, build and development setup, see the [DeveloperGuide](./docs/DeveloperGuide.md).
 
-### Contribution
+## Contribution
 
 At the moment, no external contributions are intended and merge requests from forks will automatically be rejected!
 To report a bug or request an enhancement to this extension,
 please raise a new [GitHub issue](https://github.com/tracetronic/ecu.test-diff/issues).
 
-### Support
+## Support
 
 If you have any further questions, please contact us at [support@tracetronic.com](mailto:support@tracetronic.com).
 
-### Licensing
+## Licensing
 
 This work is licensed under MIT license. This project is based on the boilerplate [Chrome Extension Webpack](https://github.com/sszczep/chrome-extension-webpack) from Sebastian Szczepański. You can find the original license text inside [LICENSE.original](./LICENSE.original).
 

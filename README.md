@@ -127,6 +127,8 @@ If you have any further questions, please contact us at [support@tracetronic.com
 
 This work is licensed under MIT license. This project is based on the boilerplate [Chrome Extension Webpack](https://github.com/sszczep/chrome-extension-webpack) from Sebastian Szczepański. You can find the original license text inside [LICENSE.original](./LICENSE.original).
 
+The logos and icons under `static/icons/tracetronic` are Copyright (c) [tracetronic GmbH](https://www.tracetronic.com/) and may be used within this project and may be published to firefox and chrome webstores as part of this project
+
 This project uses the [Red Hat Display Text Font](https://github.com/RedHatOfficial/RedHatFont) with is licensed under SIL OPEN FONT LICENSE Version 1.1 (see [OFL-1.1.txt](./LICENSES/OFL-1.1.txt))
 
 This project uses the [Material Symbols Outlined Font](https://fonts.google.com/icons) with is licensed under Apache License Version 2.0 (see [Apache-2.0.txt](./LICENSES/Apache-2.0.txt))

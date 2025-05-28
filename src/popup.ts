@@ -138,7 +138,7 @@ function createFileListItem(file: ModifiedFile, index: number) {
   const ext = getFileExt(file.filename);
   if (SUPPORTED_FILES.includes(ext)) {
     const fileImg = document.createElement('img');
-    fileImg.src = `icons/${ext}.png`;
+    fileImg.src = `icons/tracetronic/${ext}.png`;
     fileImg.classList.add('icon');
     fileInfoContainer.appendChild(fileImg);
   }

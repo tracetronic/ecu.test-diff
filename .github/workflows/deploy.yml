@@ -39,7 +39,7 @@ jobs:
                 echo "tag-version=$TAG_VERSION" >> $GITHUB_OUTPUT
             fi
   version-check:
-    needs: set-tag
+    needs: setup
     runs-on: ubuntu-latest
     outputs:
       proceed: ${{ steps.version-check.outputs.proceed }}

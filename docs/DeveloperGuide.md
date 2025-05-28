@@ -150,6 +150,14 @@ Those workflows are running automatically after having some changes to the remot
       manually afterward
     - to automatically publish an application after the review, check "Publish '<application name>'
       automatically after it has passed review" when submitting to review
+  - Firefox
+    - a mozilla developer account is required
+    - any secrets that are necessary for the publication process are set as `Actions secret`
+    - any additional information, see [Submitting an add-on](https://extensionworkshop.com/documentation/publish/submitting-an-add-on/)
+    - after publishing the application, a review is usually pending and will be published afterward
+      - _Note_:
+        - the add-on may be subject to additional review.
+        - you will receive a notification about the outcome of the review at a later time.
 
 ## Open-Source Software compliance
 

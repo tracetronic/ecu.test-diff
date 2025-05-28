@@ -21,6 +21,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       tag-version: ${{ steps.set-tag.outputs.tag-version }}
+      browsers: ${{ steps.set-browsers.outputs.browsers }}
     steps:
       - name: Set tag
         id: set-tag
@@ -38,11 +39,15 @@ jobs:
                 TAG_VERSION="${GITHUB_REF#refs/tags/}"
                 echo "tag-version=$TAG_VERSION" >> $GITHUB_OUTPUT
             fi
+      - name: Set browsers
+        id: set-browsers
+        run: |
+          BROWSERS='${{ github.event.inputs.browser || '["chrome", "firefox"]' }}'
+          echo "browsers=$BROWSERS" >> $GITHUB_OUTPUT
+
   version-check:
     needs: setup
     runs-on: ubuntu-latest
-    outputs:
-      proceed: ${{ steps.version-check.outputs.proceed }}
     steps:
       - uses: actions/checkout@v4
       - name: Check tag matches manifest version
@@ -59,7 +64,6 @@ jobs:
           # check for beta versions first
           if [[ "$MANIFEST_VERSION" == *-beta* ]]; then
             echo "❌ Release workflow is not supported for beta versions. Manifest version ($MANIFEST_VERSION) is not ready for publishing."
-            echo "proceed=false" >> $GITHUB_OUTPUT
             exit 1
           fi
 
@@ -67,26 +71,22 @@ jobs:
           TAG_VERSION=${TAG_VERSION#ecu-test-diff-}
           if [ "$TAG_VERSION" != "$MANIFEST_VERSION" ]; then
             echo "❌ Tag version ($TAG_VERSION) does not match manifest version ($MANIFEST_VERSION)."
-            echo "proceed=false" >> $GITHUB_OUTPUT
             exit 1
           fi
 
           echo "✅ Tag version matches manifest version."
-          echo "proceed=true" >> $GITHUB_OUTPUT
-
   build:
-    needs: version-check
-    if: needs.version-check.outputs.proceed == 'true'
+    needs: [setup, version-check]
     uses: ./.github/workflows/build.yml
     with:
-      browser: ${{ fromJSON(github.event.inputs.browser || '["chrome", "firefox"]') }}
+      browser: ${{ fromJSON(needs.setup.outputs.browsers) }}
 
   publish:
-    needs: [version-check, build]
+    needs: [setup, version-check, build]
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        browser: ${{ fromJSON(github.event.inputs.browser || '["chrome", "firefox"]') }}
+        browser: ${{ fromJSON(needs.setup.outputs.browsers) }}
     steps:
       - name: Get artifact from build job
         uses: actions/download-artifact@v4

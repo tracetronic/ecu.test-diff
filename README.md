@@ -76,40 +76,32 @@ You are good to go! You can also pin the extension to the toolbar for easy acces
   - ⚠️Don\'t give the token all permissions, use fine-grained tokens ⚠️
   - Only reading repository commits and pull requests and API access
     <details>
-
-      <summary >How to create an API token with <b>required minimal access</b></summary>
-
-    - GitHub
-      1. Go to your profile settings
-      2. Go to `Developer Settings`
-      3. Select `Personal access tokens` - `Fine-grained tokens`
-      4. Select `Generate new token`
-      5. Set `Repository access` as desired. If you give access to non-public repositories, make sure to grant `Repository permissions` for `Content` (read-only) and `Pull requests` (read-only)
-    - GitLab
-      1. Go to `Settings` - `Access tokens` in the relevant group or repository
-      2. Select `Add new token`
-      3. Set **Scope** to `read_api`, select a **Role** that is allowed to access code and changes
-      </details>
-
-<img src="./docs/images/firefox/configuration.png" alt="Configuration" width=800/>
+      <summary >
+        How to create an API token with <b>required minimal access</b>
+      </summary>
+      
+      - GitHub
+        1. Go to your profile settings
+        2. Go to `Developer Settings`
+        3. Select `Personal access tokens` - `Fine-grained tokens`
+        4. Select `Generate new token`
+        5. Set `Repository access` as desired. If you give access to non-public repositories, make sure to grant `Repository permissions` for `Content` (read-only) and `Pull requests` (read-only)
+      - GitLab 1. Go to `Settings` - `Access tokens` in the relevant group or repository 2. Select `Add new token` 3. Set **Scope** to `read_api`, select a **Role** that is allowed to access code and changes
+    </details>
+    <img src="./docs/images/firefox/configuration.png" alt="Configuration" width=800/>
 
 - Save the settings
 - Go back to the commit page and open the popup again
 - The supported files of the changes will be listed
 - Files that cannot be diffed with the ecu.test Diff-Viewer can still be opened individually for both the old and new versions
 - Click on a file and click on "Show new" or "Show old"
-
-<img src="./docs/images/firefox/dialog_download.png" alt="Configuration Download" width="600"/>
-
+  <img src="./docs/images/firefox/dialog_download.png" alt="Configuration Download" width="600"/>
 - Files supported by the ecu.test Diff-Viewer will open directly in the viewer
 - Click on a file and click on "Show diff"
-
-<img src="./docs/images/firefox/dialog.png" alt="Configuration" width="600"/>
-
+  <img src="./docs/images/firefox/dialog.png" alt="Configuration" width="600"/>
 - ecu.test Diff-Viewer will be opened
-  - ⚠️This needs ecu.test installed and a valid license available⚠️
-
-<img src="./docs/images/firefox/diff_viewer.png" alt="Diff Viewer" width="800"/>
+  - ⚠️This needs ecu.test installed and a valid license available ⚠️
+    <img src="./docs/images/firefox/diff_viewer.png" alt="Diff Viewer" width="800"/>
 
 ## Documentation
 

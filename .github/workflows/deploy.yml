@@ -93,7 +93,6 @@ jobs:
         with:
           node-version: 20
           cache: 'npm'
-          cache-dependency-path: 'package-lock.json'
       - name: Install web-ext
         if: matrix.browser == 'firefox'
         run: npm install -g web-ext

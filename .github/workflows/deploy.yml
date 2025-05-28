@@ -21,7 +21,6 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       tag-version: ${{ steps.set-tag.outputs.tag-version }}
-      browsers: ${{ steps.set-browsers.outputs.browsers }}
     steps:
       - name: Set tag
         id: set-tag
@@ -39,14 +38,6 @@ jobs:
                 TAG_VERSION="${GITHUB_REF#refs/tags/}"
                 echo "tag-version=$TAG_VERSION" >> $GITHUB_OUTPUT
             fi
-      - name: Set browsers
-        id: set-browsers
-        run: |
-          BROWSERS="${{ github.event.inputs.browser }}"
-          if [ -z "$BROWSERS" ]; then
-            BROWSERS='["chrome", "firefox"]'
-          fi
-          echo "browsers=$BROWSERS" >> $GITHUB_OUTPUT
 
   version-check:
     needs: setup
@@ -79,17 +70,17 @@ jobs:
 
           echo "✅ Tag version matches manifest version."
   build:
-    needs: [setup, version-check]
+    needs: version-check
     uses: ./.github/workflows/build.yml
     with:
-      browser: ${{ fromJSON(needs.setup.outputs.browsers) }}
+      browser: ${{ github.event.inputs.browser || '["chrome", "firefox"]' }}
 
   publish:
-    needs: [setup, version-check, build]
+    needs: build
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        browser: ${{ fromJSON(needs.setup.outputs.browsers) }}
+        browser: ${{ fromJSON(github.event.inputs.browser || '["chrome", "firefox"]') }}
     steps:
       - name: Get artifact from build job
         uses: actions/download-artifact@v4

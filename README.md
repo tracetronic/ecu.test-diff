@@ -88,7 +88,7 @@ You are good to go! You can also pin the extension to the toolbar for easy acces
         5. Set `Repository access` as desired. If you give access to non-public repositories, make sure to grant `Repository permissions` for `Content` (read-only) and `Pull requests` (read-only)
       - GitLab 1. Go to `Settings` - `Access tokens` in the relevant group or repository 2. Select `Add new token` 3. Set **Scope** to `read_api`, select a **Role** that is allowed to access code and changes
     </details>
-    <img style="display: block; alight: left" src="./docs/images/firefox/configuration.png" alt="Configuration" width=800/>
+    <img style="display: block; alight: left" src="./docs/images/firefox/configuration.png" alt="Configuration" width="800"/>
 
 - Save the settings
 - Go back to the commit page and open the popup again

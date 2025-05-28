@@ -86,6 +86,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: ${{ matrix.browser }}-extension
+          path: ./${{ matrix.browser }}-extension/
       - name: Set up Node v20
         if: ${{ matrix.browser == 'firefox' }}
         uses: actions/setup-node@v4
@@ -102,16 +103,16 @@ jobs:
           AMO_JWT_ISSUER: ${{ secrets.AMO_JWT_ISSUER }}
           AMO_JWT_SECRET: ${{ secrets.AMO_JWT_SECRET }}
         run: |
-          # extract artifact
-          mkdir -p "./${{ matrix.browser }}-extension"
-          unzip -o "${{ matrix.browser }}-extension.zip" -d "./${{ matrix.browser }}-extension"
-
           # sign the extension
           web-ext sign \
             --api-key="$AMO_JWT_ISSUER" \
             --api-secret="$AMO_JWT_SECRET" \
             --channel=listed \
             --source-dir="./${{ matrix.browser }}-extension"
+      - name: Zip Chrome extension
+        if: ${{ matrix.browser == 'chrome' }}
+        run: |
+          zip -r ${{ matrix.browser }}-extension.zip ${{ matrix.browser }}-extension
       - name: Publish to Chrome Web Store
         if: ${{ matrix.browser == 'chrome' }}
         uses: mnao305/chrome-extension-upload@v5.0.0

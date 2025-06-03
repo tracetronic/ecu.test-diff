@@ -13,7 +13,7 @@
   - [Prettier](#prettier)
   - [Linting](#linting)
   - [Testing](#testing)
-- [Continious Integration and Deployment](#continious-integration-and-deployment)
+- [Continuous Integration and Deployment](#continuous-integration-and-deployment)
   - [Build](#build)
   - [Deployment](#deployment)
 - [Open-Source Software compliance](#open-source-software-compliance)
@@ -126,7 +126,7 @@ The command runs all tests defined in the root 'test' folder and generates a cov
 npm run test
 ```
 
-## Continious Integration and Deployment
+## Continuous Integration and Deployment
 
 All CI/CD workflows are located in `.github/workflows`
 
@@ -142,42 +142,46 @@ Those workflows are running automatically after having some changes to the remot
 ### Build
 
 The project can be built using the [CI](../.github/workflows/build.yml) or locally running the
-corresponding `npm`  command
+corresponding `npm` command
+
 ```powershell
 # chrome
-npm run build:chrome 
+npm run build:chrome
 
 # firefox
 npm run build:firefox
 ```
+
 Running the build process via [GitHub
 action](https://github.com/tracetronic/ecu.test-diff/actions/workflows/build.yml), it provide a
 build artifact for each browser (firefox/chrome).
 
 ### Deployment
 
-To publish a new release follow the workflow:
-- increase the extension version within the [manifest file](../static/manifest.json)
-  - version schema -> `<major>.<minor>.<path>.<beta>`
-  - upgrade the version for a release by deleting the `beta version` flag to <major>.<minor>.<path>
+To publish a new release see the following workflow. All changes will be done on `main` branch:
+
+- increase the extension version tag within the [manifest file](../static/manifest.json)
+  - version schema -> `<major>.<minor>.<patch>.<beta>`
+    - for more information about beta versioning see [version format](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/version#version_format)
+  - upgrade the version tag for a release by deleting the `beta version` flag to <major>.<minor>.<patch>
   - increase the specific version
-    | old                      | new                        |
-    | :----------------------- | :------------------------- |
-    | `<major>.<minor>.<path>` | `<major>.<minor>.<path+1>` |
-    | `<major>.<minor>.<path>` | `<major>.<minor+1>.0`      |
-    | `<major>.<minor>.<path>` | `<major+1>.0.0`            |
-    |                          |                            |
-- create next tag for latest commit on `main` -> `ecu-test-diff-[0-9]+.[0-9]+.[0-9]+`
+    | old | new |
+    | :------------------------ | :-------------------------- |
+    | `<major>.<minor>.<patch>` | `<major>.<minor>.<patch+1>` |
+    | `<major>.<minor>.<patch>` | `<major>.<minor+1>.0` |
+    | `<major>.<minor>.<patch>` | `<major+1>.0.0` |
+- create next tag for latest commit -> `ecu-test-diff-[0-9]+.[0-9]+.[0-9]+`
 - commit with `Prepare release version <release.version>`
 - push changes and tag
 - create new [release](https://github.com/tracetronic/ecu.test-diff/releases) from existing tag after all checks are successful
-- increase the extension version within the [manifest file](../static/manifest.json) for next beta version
+- increase the extension version tag within the [manifest file](../static/manifest.json) for next beta version
   - `<released.version>` -> `<released.version>.0`
 - commit with `Prepare for next development cycle`
 
 See the following specific extension store information, to handle release specification individually (if needed)
 
 **Chrome Web Store**
+
 - a Google Chrome developer account is required
 - any secrets that are necessary for the publication process are set as `Actions secret`
 - any additional information, see [Publish in the Chrome Web Store](https://developer.chrome.com/docs/webstore/publish)
@@ -185,6 +189,7 @@ See the following specific extension store information, to handle release specif
   automatically afterward
 
 **Firefox Add-ons**
+
 - a mozilla developer account is required
 - any secrets that are necessary for the publication process are set as `Actions secret`
 - any additional information, see [Submitting an add-on](https://extensionworkshop.com/documentation/publish/submitting-an-add-on/)

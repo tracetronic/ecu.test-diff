@@ -13,7 +13,9 @@
   - [Prettier](#prettier)
   - [Linting](#linting)
   - [Testing](#testing)
-- [CI Integration](#ci-integration)
+- [Continious Integration and Deployment](#continious-integration-and-deployment)
+  - [Build](#build)
+  - [Deployment](#deployment)
 - [Open-Source Software compliance](#open-source-software-compliance)
   - [reuse](#reuse)
   - [Licensing](#licensing)
@@ -124,9 +126,9 @@ The command runs all tests defined in the root 'test' folder and generates a cov
 npm run test
 ```
 
-## CI Integration
+## Continious Integration and Deployment
 
-All CI workflows are located in `.github/workflows`
+All CI/CD workflows are located in `.github/workflows`
 
 | name                                      | on                                                                                                                                      | output      | artifacts                |
 | :---------------------------------------- | :-------------------------------------------------------------------------------------------------------------------------------------- | :---------- | :----------------------- |
@@ -137,27 +139,59 @@ All CI workflows are located in `.github/workflows`
 
 Those workflows are running automatically after having some changes to the remote repository.
 
-- `build`
-  - provides its artifacts additionally after each execution
-    - firefox
-    - chrome
-- `deploy`
-  - Chrome
-    - a Google Chrome developer account is required
-    - any secrets that are necessary for the publication process are set as `Actions secret`
-    - any additional information, see [Publish in the Chrome Web Store](https://developer.chrome.com/docs/webstore/publish)
-    - after publishing the application, a review is mostly outstanding and has to be published
-      manually afterward
-    - to automatically publish an application after the review, check "Publish '<application name>'
-      automatically after it has passed review" when submitting to review
-  - Firefox
-    - a mozilla developer account is required
-    - any secrets that are necessary for the publication process are set as `Actions secret`
-    - any additional information, see [Submitting an add-on](https://extensionworkshop.com/documentation/publish/submitting-an-add-on/)
-    - after publishing the application, a review is usually pending and will be published afterward
-      - _Note_:
-        - the add-on may be subject to additional review.
-        - you will receive a notification about the outcome of the review at a later time.
+### Build
+
+The project can be built using the [CI](../.github/workflows/build.yml) or locally running the
+corresponding `npm`  command
+```powershell
+# chrome
+npm run build:chrome 
+
+# firefox
+npm run build:firefox
+```
+Running the build process via [GitHub
+action](https://github.com/tracetronic/ecu.test-diff/actions/workflows/build.yml), it provide a
+build artifact for each browser (firefox/chrome).
+
+### Deployment
+
+To publish a new release follow the workflow:
+- increase the extension version within the [manifest file](../static/manifest.json)
+  - version schema -> `<major>.<minor>.<path>.<beta>`
+  - upgrade the version for a release by deleting the `beta version` flag to <major>.<minor>.<path>
+  - increase the specific version
+    | old                      | new                        |
+    | :----------------------- | :------------------------- |
+    | `<major>.<minor>.<path>` | `<major>.<minor>.<path+1>` |
+    | `<major>.<minor>.<path>` | `<major>.<minor+1>.0`      |
+    | `<major>.<minor>.<path>` | `<major+1>.0.0`            |
+    |                          |                            |
+- create next tag for latest commit on `main` -> `ecu-test-diff-[0-9]+.[0-9]+.[0-9]+`
+- commit with `Prepare release version <release.version>`
+- push changes and tag
+- create new [release](https://github.com/tracetronic/ecu.test-diff/releases) from existing tag after all checks are successful
+- increase the extension version within the [manifest file](../static/manifest.json) for next beta version
+  - `<released.version>` -> `<released.version>.0`
+- commit with `Prepare for next development cycle`
+
+See the following specific extension store information, to handle release specification individually (if needed)
+
+**Chrome Web Store**
+- a Google Chrome developer account is required
+- any secrets that are necessary for the publication process are set as `Actions secret`
+- any additional information, see [Publish in the Chrome Web Store](https://developer.chrome.com/docs/webstore/publish)
+- after publishing the application, a review is mostly outstanding and will be published
+  automatically afterward
+
+**Firefox Add-ons**
+- a mozilla developer account is required
+- any secrets that are necessary for the publication process are set as `Actions secret`
+- any additional information, see [Submitting an add-on](https://extensionworkshop.com/documentation/publish/submitting-an-add-on/)
+- after publishing the application, a review is usually pending and will be published afterward
+  - _Note_:
+    - the add-on may be subject to additional review.
+    - you will receive a notification about the outcome of the review at a later time.
 
 ## Open-Source Software compliance
 

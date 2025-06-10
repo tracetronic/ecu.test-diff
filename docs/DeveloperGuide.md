@@ -152,8 +152,7 @@ npm run build:chrome
 npm run build:firefox
 ```
 
-Running the build process via [GitHub
-action](https://github.com/tracetronic/ecu.test-diff/actions/workflows/build.yml), it provide a
+When running the build process via [GitHub action](https://github.com/tracetronic/ecu.test-diff/actions/workflows/build.yml), it will provide a
 build artifact for each browser (firefox/chrome).
 
 ### Deployment
@@ -172,13 +171,14 @@ To publish a new release see the following workflow. All changes will be done on
     | `<major>.<minor>.<patch>` | `<major+1>.0.0` |
 - create next tag for latest commit -> `ecu-test-diff-[0-9]+.[0-9]+.[0-9]+`
 - commit with `Prepare release version <release.version>`
-- push changes and tag
+- create a tag on this commit
+- push changes & the created tag
 - create new [release](https://github.com/tracetronic/ecu.test-diff/releases) from existing tag after all checks are successful
 - increase the extension version tag within the [manifest file](../static/manifest.json) for next beta version
   - `<released.version>` -> `<released.version>.0`
-- commit with `Prepare for next development cycle`
+- commit with `Prepare for next development cycle` and push
 
-See the following specific extension store information, to handle release specification individually (if needed)
+See the following store-specific information, to handle release specification individually (if needed)
 
 **Chrome Web Store**
 

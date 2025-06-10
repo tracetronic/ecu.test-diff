@@ -56,8 +56,8 @@ jobs:
           echo "Manifest version: $MANIFEST_VERSION"
 
           # check for beta versions first
-          if [[ "$MANIFEST_VERSION" == ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
-            echo "❌ Release workflow is not supported for beta versions. Manifest version ($MANIFEST_VERSION) is not ready for publishing."
+          if [[ "$MANIFEST_VERSION" != ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "❌ Manifest version ($MANIFEST_VERSION) is not a valid semantic version. Expected format: x.y.z"
             exit 1
           fi
 

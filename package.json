@@ -1,12 +1,12 @@
 {
   "name": "ecu.test_diff-extension",
-  "version": "1.0.0",
   "description": "Browser extension to open the diff viewer of tracetronic products ecu.test and trace.check from browser",
   "scripts": {
     "start:chrome": "webpack --env TARGET=chrome --watch --config webpack.dev.cjs",
     "start:firefox": "webpack --env TARGET=firefox --watch --config webpack.dev.cjs",
     "build:chrome": "webpack --env TARGET=chrome --config webpack.prod.cjs",
     "build:firefox": "webpack --env TARGET=firefox --config webpack.prod.cjs",
+    "validate:firefox": "web-ext lint --source-dir=./dist --output=json --pretty --warnings-as-errors",
     "lint": "eslint --ext .ts,.js --max-warnings=0 .",
     "prettier:write": "prettier --write",
     "prettier:check": "prettier --check .",

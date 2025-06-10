@@ -56,8 +56,8 @@ jobs:
           echo "Manifest version: $MANIFEST_VERSION"
 
           # check for beta versions first
-          if [[ "$MANIFEST_VERSION" == *-beta* ]]; then
-            echo "❌ Release workflow is not supported for beta versions. Manifest version ($MANIFEST_VERSION) is not ready for publishing."
+          if [[ "$MANIFEST_VERSION" != ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "❌ Manifest version ($MANIFEST_VERSION) is not a valid semantic version. Expected format: x.y.z"
             exit 1
           fi
 
@@ -106,6 +106,7 @@ jobs:
             --api-key="$AMO_JWT_ISSUER" \
             --api-secret="$AMO_JWT_SECRET" \
             --channel=listed \
+            --approval-timeout=0 \
             --source-dir="./${{ matrix.browser }}-extension"
       - name: Zip Chrome extension
         if: ${{ matrix.browser == 'chrome' }}

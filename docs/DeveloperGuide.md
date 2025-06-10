@@ -169,9 +169,8 @@ To publish a new release see the following workflow. All changes will be done on
     | `<major>.<minor>.<patch>` | `<major>.<minor>.<patch+1>` |
     | `<major>.<minor>.<patch>` | `<major>.<minor+1>.0` |
     | `<major>.<minor>.<patch>` | `<major+1>.0.0` |
-- create next tag for latest commit -> `ecu-test-diff-[0-9]+.[0-9]+.[0-9]+`
 - commit with `Prepare release version <release.version>`
-- create a tag on this commit
+- create next tag for latest commit -> `ecu-test-diff-[0-9]+.[0-9]+.[0-9]+`
 - push changes & the created tag
 - create new [release](https://github.com/tracetronic/ecu.test-diff/releases) from existing tag after all checks are successful
 - increase the extension version tag within the [manifest file](../static/manifest.json) for next beta version

@@ -1,4 +1,4 @@
-export const SUPPORTED_DIFF_FILES = ['pkg', 'ta', 'prj'];
+export const SUPPORTED_DIFF_FILES = ['pkg', 'ta', 'prj', 'xam', 'ppd', 'mask', 'gcd', 'tcf', 'tbc'];
 export const SUPPORTED_FILES = [...SUPPORTED_DIFF_FILES, 'trf'];
 
 export type HostInfo = {

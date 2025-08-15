@@ -39,6 +39,12 @@ Detected file extensions
 
 - `.pkg`
 - `.prj`
+- `.tcf`
+- `.tbc`
+- `.xam`
+- `.ppd`
+- `.gcd`
+- `.mask`
 - `.trf` (view only, no diff)
 
 ## Getting started

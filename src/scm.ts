@@ -511,10 +511,12 @@ class Gitlab extends BaseScmAdapter {
     parents: { sha: string }[];
     files: CommonChange[];
   }> {
+    const namespace = encodeURIComponent(
+      `${commitInfo.owner}/${commitInfo.repo}`,
+    );
+    
     // get project id
-    const commitUrl = `${this.getApiUrl()}/projects/${commitInfo.owner}%2F${
-      commitInfo.repo
-    }/repository/commits/${commitInfo.commitHash}`;
+    const commitUrl = `${this.getApiUrl()}/projects/${namespace}/repository/commits/${commitInfo.commitHash}`;
 
     let response = await fetch(commitUrl, {
       headers: this.createHeaders(token),
@@ -527,9 +529,7 @@ class Gitlab extends BaseScmAdapter {
     }
     const commitData = await response.json();
 
-    const diffUrl = `${this.getApiUrl()}/projects/${commitInfo.owner}%2F${
-      commitInfo.repo
-    }/repository/commits/${commitInfo.commitHash}/diff`;
+    const diffUrl = `${this.getApiUrl()}/projects/${namespace}/repository/commits/${commitInfo.commitHash}/diff`;
 
     response = await fetch(diffUrl, {
       headers: this.createHeaders(token),

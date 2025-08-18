@@ -365,7 +365,9 @@ class Github extends BaseScmAdapter {
     const baseApiUrl = `${this.getApiUrl()}/repos/${commitInfo.owner}/${
       commitInfo.repo
     }`;
-    const modifiedFiles = commitData.files.map((file) => {
+    return commitData.files
+      .filter(f => this.isSupportedFile(f.filename))
+      .map(file => {
       const filenameOld = file.previous_filename ?? file.filename;
       const shaOld = commitData.parents[0]?.sha;
       return {
@@ -387,8 +389,6 @@ class Github extends BaseScmAdapter {
         },
       };
     });
-
-    return modifiedFiles;
   }
 
   private async getPullDetails(
@@ -429,7 +429,10 @@ class Github extends BaseScmAdapter {
     const baseApiUrl = `${this.getApiUrl()}/repos/${pullInfo.owner}/${
       pullInfo.repo
     }`;
-    const modifiedFiles = pullData.files.map((file) => {
+    
+    return pullData.files
+      .filter(f => this.isSupportedFile(f.filename))
+      .map(file => {
       const filenameOld = file.previous_filename ?? file.filename;
       const shaOld = pullData.info.base.sha;
       return {
@@ -449,7 +452,6 @@ class Github extends BaseScmAdapter {
         },
       };
     });
-    return modifiedFiles;
   }
 }
 

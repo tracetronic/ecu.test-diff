@@ -49,6 +49,11 @@ Detected file extensions
 
 ## Getting started
 
+### Prerequisites
+
+- ecu.test or trace.check **2025.2** or newer installed (2025.1 probably works with some limitations)
+- There is no license required for comparing files
+
 ### Installation
 
 To install the extension, use the specific installation method for your browser.
@@ -110,8 +115,6 @@ You are good to go! You can also pin the extension to the toolbar for easy acces
   <img style="display: block; alight: left" src="./docs/images/firefox/dialog.png" alt="Configuration" width="600"/>
 
 - ecu.test Diff-Viewer will be opened
-
-  - ⚠️This needs ecu.test installed and a valid license available ⚠️
 
     <img style="display: block; alight: left" src="./docs/images/firefox/diff_viewer.png" alt="Diff Viewer" width="800"/>
 

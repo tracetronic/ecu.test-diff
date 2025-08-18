@@ -514,7 +514,7 @@ class Gitlab extends BaseScmAdapter {
     const namespace = encodeURIComponent(
       `${commitInfo.owner}/${commitInfo.repo}`,
     );
-    
+
     // get project id
     const commitUrl = `${this.getApiUrl()}/projects/${namespace}/repository/commits/${commitInfo.commitHash}`;
 
@@ -564,9 +564,14 @@ class Gitlab extends BaseScmAdapter {
       throw new Error('Unable to retrieve modified files from commitData.');
     }
 
-    const baseApiUrl = `${this.getApiUrl()}/projects/${commitInfo.owner}%2F${
-      commitInfo.repo
-    }/repository/files`;
+    const namespace = encodeURIComponent(
+      `${commitInfo.owner}/${commitInfo.repo}`,
+    );
+    const baseApiUrl = `${this.getApiUrl()}/projects/${namespace}/repository/files`;
+
+    // commitData.parents[0] is probably empty if this is the first commit
+    const shaOld = commitData.parents[0]?.sha || commitData.sha;
+    const shaNew = commitData.sha;
     const modifiedFiles = commitData.files.map((file) => {
       return {
         filename: file.filename,
@@ -576,16 +581,16 @@ class Gitlab extends BaseScmAdapter {
         renamed: file.renamed,
         additions: file.additions,
         deletions: file.deletions,
-        shaOld: commitData.parents[0].sha,
-        shaNew: commitData.sha,
+        shaOld,
+        shaNew,
         download: {
           type: 'raw' as const,
           old: `${baseApiUrl}/${file.filenameOld.replace(
             /\//g,
             '%2f',
-          )}/raw?ref=${commitData.parents[0].sha}`,
+          )}/raw?ref=${shaOld}`,
           new: `${baseApiUrl}/${file.filename.replace(/\//g, '%2f')}/raw?ref=${
-            commitData.sha
+            shaNew
           }`,
         },
       };
@@ -604,10 +609,9 @@ class Gitlab extends BaseScmAdapter {
     };
     files: CommonChange[];
   }> {
+    const namespace = encodeURIComponent(`${pullInfo.owner}/${pullInfo.repo}`);
     const response = await fetch(
-      `${this.getApiUrl()}/projects/${pullInfo.owner}%2f${
-        pullInfo.repo
-      }/merge_requests/${pullInfo.pullNumber}/changes`,
+      `${this.getApiUrl()}/projects/${namespace}/merge_requests/${pullInfo.pullNumber}/changes`,
       { headers: this.createHeaders(token) },
     );
     if (!response.ok) {
@@ -632,10 +636,13 @@ class Gitlab extends BaseScmAdapter {
     token: string,
   ): Promise<ModifiedFile[]> {
     const pullData = await this.getPullDetails(pullInfo, token);
-    const baseApiUrl = `${this.getApiUrl()}/projects/${pullInfo.owner}%2F${
-      pullInfo.repo
-    }/repository/files`;
+    const namespace = encodeURIComponent(`${pullInfo.owner}/${pullInfo.repo}`);
+    const baseApiUrl = `${this.getApiUrl()}/projects/${namespace}/repository/files`;
 
+
+    // pullData.info.base.sha is probably not set if target branch has no commit yet
+    const shaOld = pullData.info.base.sha || pullData.info.head.sha;
+    const shaNew = pullData.info.head.sha;
     const modifiedFiles = pullData.files.map((file) => {
       return {
         filename: file.filename,
@@ -645,16 +652,16 @@ class Gitlab extends BaseScmAdapter {
         renamed: file.renamed,
         additions: file.additions,
         deletions: file.deletions,
-        shaOld: pullData.info.base.sha,
-        shaNew: pullData.info.head.sha,
+        shaOld,
+        shaNew,
         download: {
           type: 'raw' as const,
           old: `${baseApiUrl}/${file.filenameOld.replace(
             /\//g,
             '%2f',
-          )}/raw?ref=${pullData.info.base.sha}`,
+          )}/raw?ref=${shaOld}`,
           new: `${baseApiUrl}/${file.filename.replace(/\//g, '%2f')}/raw?ref=${
-            pullData.info.head.sha
+            shaNew
           }`,
         },
       };

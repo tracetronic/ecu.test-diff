@@ -331,6 +331,33 @@ class Github extends BaseScmAdapter {
     return null;
   }
 
+  private async fetchPaginated<T>(
+    url: string,
+    token: string,
+    perPage = 100,
+  ): Promise<T[]> {
+    let page = 1;
+    const allItems: T[] = [];
+    let itemsOnPage: T[];
+
+    do {
+      const pageUrl = `${url}?per_page=${perPage}&page=${page}`;
+      const response = await fetch(pageUrl, {
+        headers: this.createHeaders(token),
+      });
+      if (!response.ok) {
+        throw new Error(
+          `Failed to fetch paginated data (page ${page}): ${response.statusText}`,
+        );
+      }
+      itemsOnPage = await response.json();
+      allItems.push(...itemsOnPage);
+      page++;
+    } while (itemsOnPage.length === perPage);
+
+    return allItems;
+  }
+
   private async getCommitDetails(
     commitInfo: CommitInfo,
     token: string,
@@ -366,29 +393,29 @@ class Github extends BaseScmAdapter {
       commitInfo.repo
     }`;
     return commitData.files
-      .filter(f => this.isSupportedFile(f.filename))
-      .map(file => {
-      const filenameOld = file.previous_filename ?? file.filename;
-      const shaOld = commitData.parents[0]?.sha;
-      return {
-        filename: file.filename,
-        filenameOld,
-        new: file.status == 'added',
-        renamed: file.status == 'renamed',
-        deleted: file.status == 'removed',
-        additions: file.additions,
-        deletions: file.deletions,
-        shaOld,
-        shaNew: commitData.sha,
-        download: {
-          type: 'json' as const,
-          old: shaOld
-            ? `${baseApiUrl}/contents/${filenameOld}?ref=${shaOld}`
-            : null,
-          new: `${baseApiUrl}/contents/${file.filename}?ref=${commitData.sha}`,
-        },
-      };
-    });
+      .filter((f) => this.isSupportedFile(f.filename))
+      .map((file) => {
+        const filenameOld = file.previous_filename ?? file.filename;
+        const shaOld = commitData.parents[0]?.sha;
+        return {
+          filename: file.filename,
+          filenameOld,
+          new: file.status == 'added',
+          renamed: file.status == 'renamed',
+          deleted: file.status == 'removed',
+          additions: file.additions,
+          deletions: file.deletions,
+          shaOld,
+          shaNew: commitData.sha,
+          download: {
+            type: 'json' as const,
+            old: shaOld
+              ? `${baseApiUrl}/contents/${filenameOld}?ref=${shaOld}`
+              : null,
+            new: `${baseApiUrl}/contents/${file.filename}?ref=${commitData.sha}`,
+          },
+        };
+      });
   }
 
   private async getPullDetails(
@@ -399,7 +426,7 @@ class Github extends BaseScmAdapter {
       commitInfo.repo
     }/pulls/${commitInfo.pullNumber}`;
 
-    let response = await fetch(pullUrl, {
+    const response = await fetch(pullUrl, {
       headers: this.createHeaders(token),
     });
 
@@ -413,12 +440,10 @@ class Github extends BaseScmAdapter {
     const pullFilesUrl = `${this.getApiUrl()}/repos/${commitInfo.owner}/${
       commitInfo.repo
     }/pulls/${commitInfo.pullNumber}/files`;
-    response = await fetch(pullFilesUrl, {
-      headers: this.createHeaders(token),
-    });
-    const files = await response.json();
+    const allFiles: GithubChangeFile[] =
+      await this.fetchPaginated<GithubChangeFile>(pullFilesUrl, token);
 
-    return { info, files };
+    return { info, files: allFiles };
   }
 
   protected async handlePullRequest(
@@ -429,29 +454,29 @@ class Github extends BaseScmAdapter {
     const baseApiUrl = `${this.getApiUrl()}/repos/${pullInfo.owner}/${
       pullInfo.repo
     }`;
-    
+
     return pullData.files
-      .filter(f => this.isSupportedFile(f.filename))
-      .map(file => {
-      const filenameOld = file.previous_filename ?? file.filename;
-      const shaOld = pullData.info.base.sha;
-      return {
-        filename: file.filename,
-        filenameOld,
-        new: file.status == 'added',
-        renamed: file.status == 'renamed',
-        deleted: file.status == 'removed',
-        additions: file.additions,
-        deletions: file.deletions,
-        shaOld,
-        shaNew: pullData.info.head.sha,
-        download: {
-          type: 'json' as const,
-          old: `${baseApiUrl}/contents/${file.filename}?ref=${shaOld}`,
-          new: `${baseApiUrl}/contents/${file.filename}?ref=${pullData.info.head.sha}`,
-        },
-      };
-    });
+      .filter((f) => this.isSupportedFile(f.filename))
+      .map((file) => {
+        const filenameOld = file.previous_filename ?? file.filename;
+        const shaOld = pullData.info.base.sha;
+        return {
+          filename: file.filename,
+          filenameOld,
+          new: file.status == 'added',
+          renamed: file.status == 'renamed',
+          deleted: file.status == 'removed',
+          additions: file.additions,
+          deletions: file.deletions,
+          shaOld,
+          shaNew: pullData.info.head.sha,
+          download: {
+            type: 'json' as const,
+            old: `${baseApiUrl}/contents/${file.filename}?ref=${shaOld}`,
+            new: `${baseApiUrl}/contents/${file.filename}?ref=${pullData.info.head.sha}`,
+          },
+        };
+      });
   }
 }
 
@@ -505,6 +530,36 @@ class Gitlab extends BaseScmAdapter {
       });
   }
 
+  private async fetchPaginated<T>(
+    url: string,
+    token: string,
+    perPage = 100,
+  ): Promise<T[]> {
+    let page = 1;
+    let totalPages = 1;
+    const allItems: T[] = [];
+
+    do {
+      const response = await fetch(`${url}?per_page=${perPage}&page=${page}`, {
+        headers: this.createHeaders(token),
+      });
+      if (!response.ok) {
+        throw new Error(
+          `Failed to fetch paginated data (page ${page}): [${response.status}] ${response.statusText}`,
+        );
+      }
+      if (page === 1) {
+        const tp = response.headers.get('x-total-pages');
+        totalPages = tp ? parseInt(tp, 10) : 1;
+      }
+      const batch: T[] = await response.json();
+      allItems.push(...batch);
+      page++;
+    } while (page <= totalPages);
+
+    return allItems;
+  }
+
   private async getCommitDetails(
     commitInfo: CommitInfo,
     token: string,
@@ -516,11 +571,9 @@ class Gitlab extends BaseScmAdapter {
     const namespace = encodeURIComponent(
       `${commitInfo.owner}/${commitInfo.repo}`,
     );
-
-    // get project id
     const commitUrl = `${this.getApiUrl()}/projects/${namespace}/repository/commits/${commitInfo.commitHash}`;
 
-    let response = await fetch(commitUrl, {
+    const response = await fetch(commitUrl, {
       headers: this.createHeaders(token),
     });
 
@@ -532,22 +585,13 @@ class Gitlab extends BaseScmAdapter {
     const commitData = await response.json();
 
     const diffUrl = `${this.getApiUrl()}/projects/${namespace}/repository/commits/${commitInfo.commitHash}/diff`;
+    const allChanges: GitlabChange[] = await this.fetchPaginated(
+      diffUrl,
+      token,
+    );
 
-    response = await fetch(diffUrl, {
-      headers: this.createHeaders(token),
-    });
-
-    if (!response.ok) {
-      throw new Error(
-        `Failed to retrieve commit details: [${response.status}] ${response.statusText}`,
-      );
-    }
-
-    const diffData: GitlabChange[] = await response.json();
-    const files = this.processChanges(diffData);
-    const parents = commitData.parent_ids.map((id: string) => {
-      return { sha: id };
-    });
+    const files = this.processChanges(allChanges);
+    const parents = commitData.parent_ids.map((id: string) => ({ sha: id }));
 
     return {
       sha: commitInfo.commitHash,
@@ -612,8 +656,15 @@ class Gitlab extends BaseScmAdapter {
     files: CommonChange[];
   }> {
     const namespace = encodeURIComponent(`${pullInfo.owner}/${pullInfo.repo}`);
+    const diffsUrl = `${this.getApiUrl()}/projects/${namespace}/merge_requests/${pullInfo.pullNumber}/diffs`;
+    const allChanges: GitlabChange[] = await this.fetchPaginated<GitlabChange>(
+      diffsUrl,
+      token,
+    );
+    const files: CommonChange[] = this.processChanges(allChanges);
+
     const response = await fetch(
-      `${this.getApiUrl()}/projects/${namespace}/merge_requests/${pullInfo.pullNumber}/changes`,
+      `${this.getApiUrl()}/projects/${namespace}/merge_requests/${pullInfo.pullNumber}`,
       { headers: this.createHeaders(token) },
     );
     if (!response.ok) {
@@ -622,11 +673,10 @@ class Gitlab extends BaseScmAdapter {
       );
     }
     const pullData = await response.json();
-    const files = this.processChanges(pullData.changes);
 
     return {
       info: {
-        head: { sha: pullData.sha },
+        head: { sha: pullData.diff_refs.head_sha },
         base: { sha: pullData.diff_refs.base_sha },
       },
       files,
@@ -640,7 +690,6 @@ class Gitlab extends BaseScmAdapter {
     const pullData = await this.getPullDetails(pullInfo, token);
     const namespace = encodeURIComponent(`${pullInfo.owner}/${pullInfo.repo}`);
     const baseApiUrl = `${this.getApiUrl()}/projects/${namespace}/repository/files`;
-
 
     // pullData.info.base.sha is probably not set if target branch has no commit yet
     const shaOld = pullData.info.base.sha || pullData.info.head.sha;

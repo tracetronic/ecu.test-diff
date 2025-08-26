@@ -96,7 +96,7 @@ abstract class BaseScmAdapter {
       parsedUrl = new URL(url);
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
-      throw new Error(`Not avalid URL: ${url}`);
+      throw new Error(`Not a valid URL: ${url}`);
     }
 
     const commitInfo = this.testCommit(parsedUrl);
@@ -347,7 +347,7 @@ class Github extends BaseScmAdapter {
       });
       if (!response.ok) {
         throw new Error(
-          `Failed to fetch paginated data (page ${page}): ${response.statusText}`,
+          `Failed to retrieve paginated data (page ${page}): ${response.statusText}`,
         );
       }
       itemsOnPage = await response.json();
@@ -432,7 +432,7 @@ class Github extends BaseScmAdapter {
 
     if (!response.ok) {
       throw new Error(
-        `Failed to retrieve commit details: ${response.statusText}`,
+        `Failed to retrieve pull details: ${response.statusText}`,
       );
     }
     const info = await response.json();
@@ -545,7 +545,7 @@ class Gitlab extends BaseScmAdapter {
       });
       if (!response.ok) {
         throw new Error(
-          `Failed to fetch paginated data (page ${page}): [${response.status}] ${response.statusText}`,
+          `Failed to retrieve paginated data (page ${page}): [${response.status}] ${response.statusText}`,
         );
       }
       if (page === 1) {

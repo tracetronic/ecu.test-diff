@@ -1,16 +1,36 @@
 import { scmAdapters } from '../src/scm.js';
 import { ModifiedFile } from '../src/types.ts';
+
 import expect from 'expect.js';
 import sinon, { SinonStub } from 'sinon';
 import browser from 'webextension-polyfill';
 
+type DownloadDelta = { id: number; state: { current: string } };
+type DownloadDeltaCallback = (delta: DownloadDelta) => void;
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 let adapter: any;
 let sandbox: sinon.SinonSandbox;
-let downloadListeners: Array<(delta: any) => void>;
-let downloadsStub: any;
-let tabsStub: any;
+let downloadListeners: Array<DownloadDeltaCallback>;
+let downloadsStub: {
+  download: SinonStub;
+  search: SinonStub;
+  onChanged: {
+    addListener: (cb: DownloadDeltaCallback) => void;
+    removeListener: SinonStub;
+  };
+  erase: SinonStub;
+};
+let tabsStub: { update: SinonStub };
 let createObjectURLStub: SinonStub;
 let revokeObjectURLStub: SinonStub;
+
+interface GlobalWithFetchStub extends GlobalThis {
+  fetch?: SinonStub<[input: RequestInfo | { url: string }], Promise<Response>>;
+  Buffer: typeof Buffer;
+}
+
+const globalWithFetchStub = globalThis as unknown as GlobalWithFetchStub;
 
 beforeEach(() => {
   sandbox = sinon.createSandbox();
@@ -22,7 +42,9 @@ beforeEach(() => {
     download: sandbox.stub().resolves(123),
     search: sandbox.stub().resolves([{ filename: '/tmp/file.ext' }]),
     onChanged: {
-      addListener: (cb: any) => downloadListeners.push(cb),
+      addListener: (cb: DownloadDeltaCallback) => {
+        downloadListeners.push(cb);
+      },
       removeListener: sandbox.stub(),
     },
     erase: sandbox.stub().resolves(undefined),
@@ -34,7 +56,7 @@ beforeEach(() => {
   sandbox.stub(browser, 'downloads').get(() => downloadsStub);
   sandbox.stub(browser, 'tabs').get(() => tabsStub);
 
-  (global as any).fetch = sandbox.stub();
+  globalWithFetchStub.fetch = sandbox.stub();
 
   createObjectURLStub = sandbox
     .stub(URL, 'createObjectURL')
@@ -43,7 +65,7 @@ beforeEach(() => {
     .stub(URL, 'revokeObjectURL')
     .callsFake(() => {});
 
-  (global as any).Buffer = Buffer;
+  globalWithFetchStub.Buffer = Buffer;
 });
 
 afterEach(() => {
@@ -61,7 +83,7 @@ describe('Download helpers', () => {
   describe('downloadDummy()', () => {
     it('calls doDownload with correct data URL and filename', async () => {
       const ddSpy = sandbox
-        .stub(adapter as any, 'doDownload')
+        .stub(adapter, 'doDownload')
         .resolves('/tmp/diff/file.ext');
       const out = await adapter['downloadDummy']('path/to/file.ext', '.X');
       expect(
@@ -74,7 +96,7 @@ describe('Download helpers', () => {
     });
 
     it('uses correct mime type', async () => {
-      const spy = sandbox.stub(adapter as any, 'doDownload');
+      const spy = sandbox.stub(adapter, 'doDownload');
       await adapter['downloadDummy']('some/path/file.ext', '.X');
       expect(
         spy.calledWith('data:text/ext;charset=utf-8,', 'diff/file/file.X.ext'),
@@ -112,7 +134,8 @@ describe('Download helpers', () => {
       try {
         await adapter['doDownload']('url', 'file.ext');
         expect().fail('Expected error not thrown');
-      } catch (err: any) {
+      } catch (err: unknown) {
+        if (!(err instanceof Error)) throw err;
         expect(err.message).to.be('Failed to start download');
       }
     });
@@ -127,7 +150,8 @@ describe('Download helpers', () => {
       try {
         await promise;
         expect().fail('Expected error not thrown');
-      } catch (err: any) {
+      } catch (err: unknown) {
+        if (!(err instanceof Error)) throw err;
         expect(err.message).to.be('Failed to retrieve download item');
       }
     });
@@ -143,17 +167,20 @@ describe('Download helpers', () => {
     const fakeJson = { content: base64Content };
 
     beforeEach(() => {
-      (global as any).fetch.resolves({
-        ok: true,
-        statusText: 'OK',
-        json: async () => fakeJson,
-        blob: async () => new Blob([Uint8Array.from('content')]),
-        headers: { get: (_: string) => null },
-      });
+      globalWithFetchStub.fetch = sandbox.stub().callsFake(
+        () =>
+          Promise.resolve(
+            new Response(JSON.stringify(fakeJson), {
+              statusText: 'OK',
+              headers: new Headers(),
+            }),
+          ),
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      ) as any;
     });
 
     it('handles JSON type with ObjectURL support', async () => {
-      sandbox.stub(adapter as any, 'doDownload').resolves('/out.ext');
+      sandbox.stub(adapter, 'doDownload').resolves('/out.ext');
 
       const out = await adapter['doDownloadFile'](
         apiUrl,
@@ -164,9 +191,11 @@ describe('Download helpers', () => {
         sha,
       );
 
+      // Access createHeaders via a subclass for testing
+      const headers = adapter.createHeaders(token);
       expect(
-        (global as any).fetch.calledWith(apiUrl, {
-          headers: adapter.createHeaders(token),
+        globalWithFetchStub.fetch!.calledWith(apiUrl, {
+          headers,
         }),
       ).to.be(true);
       expect(createObjectURLStub.called).to.be(true);
@@ -175,7 +204,9 @@ describe('Download helpers', () => {
     });
 
     it('throws a non-ok response', async () => {
-      (global as any).fetch.resolves({ ok: false, statusText: '404' });
+      globalWithFetchStub.fetch!.resolves(
+        new Response(null, { statusText: '404', status: 404 }),
+      );
       try {
         await adapter['doDownloadFile'](
           apiUrl,
@@ -186,7 +217,8 @@ describe('Download helpers', () => {
           sha,
         );
         expect().fail('Expected error not thrown');
-      } catch (err: any) {
+      } catch (err: unknown) {
+        if (!(err instanceof Error)) throw err;
         expect(err.message).to.match(/Failed to fetch file dir\/file.ext/);
       }
     });
@@ -195,14 +227,14 @@ describe('Download helpers', () => {
       const blobUrl = 'blob:fake-object-url';
       createObjectURLStub.returns(blobUrl);
       const contentBytes = Uint8Array.from(Buffer.from('content'));
-      (global as any).fetch.resolves({
-        ok: true,
-        statusText: 'OK',
-        blob: async () => new Blob([contentBytes]),
-        headers: { get: (_: string) => null },
-      });
+      globalWithFetchStub.fetch!.resolves(
+        new Response(new Blob([contentBytes]), {
+          statusText: 'OK',
+          headers: new Headers(),
+        }),
+      );
       const ddStub = sandbox
-        .stub(adapter as any, 'doDownload')
+        .stub(adapter, 'doDownload')
         .resolves('/withObjectURL.ext');
       const out = await adapter['doDownloadFile'](
         apiUrl,
@@ -219,16 +251,18 @@ describe('Download helpers', () => {
 
     it('handles RAW type fallback (no ObjectURL) by building correct data URI', async () => {
       (URL.createObjectURL as SinonStub).restore();
-      (URL.createObjectURL as any) = undefined;
+      (URL.createObjectURL as unknown) = undefined;
+
       const contentBytes = Uint8Array.from(Buffer.from('content'));
-      (global as any).fetch.resolves({
-        ok: true,
-        statusText: 'OK',
-        blob: async () => new Blob([contentBytes]),
-        headers: { get: (_: string) => null },
-      });
+      globalWithFetchStub.fetch!.resolves(
+        new Response(new Blob([contentBytes]), {
+          status: 200,
+          statusText: 'OK',
+          headers: new Headers(),
+        }),
+      );
       const ddStub = sandbox
-        .stub(adapter as any, 'doDownload')
+        .stub(adapter, 'doDownload')
         .resolves('/fallback.ext');
       const out = await adapter['doDownloadFile'](
         apiUrl,
@@ -249,33 +283,32 @@ describe('Download helpers', () => {
       try {
         await adapter['doDownloadFile'](
           apiUrl,
-          'xml',
+          'xml' as unknown,
           filename,
           suffix,
           token,
           sha,
         );
         expect().fail('Expected error not thrown');
-      } catch (err: any) {
+      } catch (err: unknown) {
+        if (!(err instanceof Error)) throw err;
         expect(err.message).to.be('Unknown download type: xml');
       }
     });
 
     it('builds data URI when URL.createObjectURL is unavailable', async () => {
       (URL.createObjectURL as SinonStub).restore();
-      (URL.createObjectURL as any) = undefined;
+      (URL.createObjectURL as unknown) = undefined;
 
       const payload = Buffer.from('hello').toString('base64');
-      (global as any).fetch.resolves({
-        ok: true,
-        statusText: 'OK',
-        json: async () => ({ content: payload }),
-        headers: { get: (_: string) => null },
-      });
+      globalWithFetchStub.fetch!.resolves(
+        new Response(JSON.stringify({ content: payload }), {
+          statusText: 'OK',
+          headers: new Headers(),
+        }),
+      );
 
-      const dd = sandbox
-        .stub(adapter as any, 'doDownload')
-        .resolves('/jf.json');
+      const dd = sandbox.stub(adapter, 'doDownload').resolves('/jf.json');
       const out = await adapter['doDownloadFile'](
         'u',
         'json',
@@ -307,10 +340,10 @@ describe('Download helpers', () => {
       };
 
       const ddFileStub = sandbox
-        .stub(adapter as any, 'doDownloadFile')
+        .stub(adapter, 'doDownloadFile')
         .resolves('/old.ext');
       const dummyStub = sandbox
-        .stub(adapter as any, 'downloadDummy')
+        .stub(adapter, 'downloadDummy')
         .resolves('/new.ext');
 
       await adapter.downloadDiff(file, 'token');
@@ -348,10 +381,10 @@ describe('Download helpers', () => {
       };
 
       const dummyStub = sandbox
-        .stub(adapter as any, 'downloadDummy')
+        .stub(adapter, 'downloadDummy')
         .resolves('/old.ext');
       const ddFileStub = sandbox
-        .stub(adapter as any, 'doDownloadFile')
+        .stub(adapter, 'doDownloadFile')
         .resolves('/new.ext');
 
       await adapter.downloadDiff(file, 'token');
@@ -390,7 +423,7 @@ describe('Download helpers', () => {
       };
 
       const ddFileStub = sandbox
-        .stub(adapter as any, 'doDownloadFile')
+        .stub(adapter, 'doDownloadFile')
         .resolves('/file.ext');
       await adapter.downloadFile(file, 'new', 'token');
       expect(

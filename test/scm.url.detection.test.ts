@@ -1,6 +1,5 @@
-import { scmAdapters } from '../src/scm.js';
-import { HostInfo } from '../src/types.js';
 import expect from 'expect.js';
+import { createScmAdaptersForTests } from './utils.js';
 
 const GITHUB_REPO = 'https://github.com/foo/bar';
 const GITLAB_REPO = 'https://gitlab.com/foo/bar';
@@ -21,21 +20,14 @@ const GITLAB_MR_VARIANTS = [
   'unexisting_subpage',
 ];
 
-const gh = new scmAdapters.github({
-  host: 'github.com',
-  scm: 'github',
-} as HostInfo);
-const gl = new scmAdapters.gitlab({
-  host: 'gitlab.com',
-  scm: 'gitlab',
-} as HostInfo);
+const { gh, gl } = createScmAdaptersForTests();
 
 describe('URL Detection', () => {
   describe('GitHub Adapter', () => {
     it('recognizes valid commit URLs', () => {
       const url = new URL(`${GITHUB_REPO}/commit/123abc`);
-      expect((gh as any).testCommit(url)).to.not.equal(null);
-      expect((gh as any).testPullRequest(url)).to.equal(null);
+      expect(gh.testCommit(url)).to.not.equal(null);
+      expect(gh.testPullRequest(url)).to.equal(null);
     });
 
     it('returns null for invalid commit URLs', () => {
@@ -45,31 +37,31 @@ describe('URL Detection', () => {
         `${GITHUB_REPO}/commit/`,
       ].forEach((urlStr) => {
         const url = new URL(urlStr);
-        expect((gh as any).testCommit(url)).to.equal(null);
-        expect((gh as any).testPullRequest(url)).to.equal(null);
+        expect(gh.testCommit(url)).to.equal(null);
+        expect(gh.testPullRequest(url)).to.equal(null);
       });
     });
 
     it('recognizes valid pull request URLs (including subpages)', () => {
       GITHUB_PR_VARIANTS.forEach((suffix) => {
         const url = new URL(`${GITHUB_REPO}/pull/1/${suffix}`);
-        expect((gh as any).testPullRequest(url)).to.not.equal(null);
-        expect((gh as any).testCommit(url)).to.equal(null);
+        expect(gh.testPullRequest(url)).to.not.equal(null);
+        expect(gh.testCommit(url)).to.equal(null);
       });
     });
 
     it('returns null for invalid pull request URLs', () => {
       const url = new URL(`${GITHUB_REPO}/pull`);
-      expect((gh as any).testCommit(url)).to.equal(null);
-      expect((gh as any).testPullRequest(url)).to.equal(null);
+      expect(gh.testCommit(url)).to.equal(null);
+      expect(gh.testPullRequest(url)).to.equal(null);
     });
   });
 
   describe('GitLab Adapter', () => {
     it('recognizes valid commit URLs', () => {
       const url = new URL(`${GITLAB_REPO}/-/commit/123abc`);
-      expect((gl as any).testCommit(url)).to.not.equal(null);
-      expect((gl as any).testPullRequest(url)).to.equal(null);
+      expect(gl.testCommit(url)).to.not.equal(null);
+      expect(gl.testPullRequest(url)).to.equal(null);
     });
 
     it('returns null for invalid commit URLs', () => {
@@ -79,23 +71,23 @@ describe('URL Detection', () => {
         `${GITLAB_REPO}/-/commit/`,
       ].forEach((urlStr) => {
         const url = new URL(urlStr);
-        expect((gl as any).testCommit(url)).to.equal(null);
-        expect((gl as any).testPullRequest(url)).to.equal(null);
+        expect(gl.testCommit(url)).to.equal(null);
+        expect(gl.testPullRequest(url)).to.equal(null);
       });
     });
 
     it('recognizes valid merge request URLs (including subpages)', () => {
       GITLAB_MR_VARIANTS.forEach((suffix) => {
         const url = new URL(`${GITLAB_REPO}/-/merge_requests/1/${suffix}`);
-        expect((gl as any).testPullRequest(url)).to.not.equal(null);
-        expect((gl as any).testCommit(url)).to.equal(null);
+        expect(gl.testPullRequest(url)).to.not.equal(null);
+        expect(gl.testCommit(url)).to.equal(null);
       });
     });
 
     it('returns null for invalid merge request URLs', () => {
       const url = new URL(`${GITLAB_REPO}/-/merge_requests`);
-      expect((gl as any).testCommit(url)).to.equal(null);
-      expect((gl as any).testPullRequest(url)).to.equal(null);
+      expect(gl.testCommit(url)).to.equal(null);
+      expect(gl.testPullRequest(url)).to.equal(null);
     });
   });
 });

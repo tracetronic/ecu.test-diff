@@ -2,9 +2,9 @@ import { scmAdapters } from '../src/scm.js';
 import { ModifiedFile } from '../src/types.ts';
 import expect from 'expect.js';
 import sinon from 'sinon';
+import { createScmAdaptersForTests, globalWithFetch } from './utils.ts';
 
-const gh = new scmAdapters.github({ host: 'github.com', scm: 'github' });
-const gl = new scmAdapters.gitlab({ host: 'gitlab.com', scm: 'gitlab' });
+const { gh, gl } = createScmAdaptersForTests();
 
 describe('Fetch Logic', () => {
   describe('getCommitDetails()', () => {
@@ -13,35 +13,36 @@ describe('Fetch Logic', () => {
       const token = 'tok';
 
       beforeEach(() => {
-        sinon.stub(gh as any, 'getApiUrl').returns('https://api');
+        sinon.stub(gh, 'getApiUrl').returns('https://api');
         sinon
-          .stub(gh as any, 'createHeaders')
+          .stub(gh, 'createHeaders')
           .withArgs(token)
           .returns({ Authorization: 'token tok' });
       });
       afterEach(() => sinon.restore());
 
       it('returns parsed JSON when response.ok=true', async () => {
-        (globalThis as any).fetch = sinon.stub().resolves({
+        globalWithFetch.fetch = sinon.stub().resolves({
           ok: true,
           statusText: 'OK',
           json: async () => ({ sha: 'sha123', files: [] }),
         });
 
-        const result = await (gh as any).getCommitDetails(fakeInfo, token);
+        const result = await gh.getCommitDetails(fakeInfo, token);
         expect(result).to.eql({ sha: 'sha123', files: [] });
       });
 
       it('throws if response.ok=false', async () => {
-        (globalThis as any).fetch = sinon.stub().resolves({
+        globalWithFetch.fetch = sinon.stub().resolves({
           ok: false,
           statusText: 'Not Found',
         });
 
         try {
-          await (gh as any).getCommitDetails(fakeInfo, token);
+          await gh.getCommitDetails(fakeInfo, token);
           expect().fail('Expected error');
-        } catch (err: any) {
+        } catch (err: unknown) {
+          if (!(err instanceof Error)) throw err;
           expect(err.message).to.match(
             /Failed to retrieve commit details: Not Found/,
           );
@@ -54,16 +55,16 @@ describe('Fetch Logic', () => {
       const token = 'tok';
 
       beforeEach(() => {
-        sinon.stub(gl as any, 'getApiUrl').returns('https://gitlab.com/api/v4');
+        sinon.stub(gl, 'getApiUrl').returns('https://gitlab.com/api/v4');
         sinon
-          .stub(gl as any, 'createHeaders')
+          .stub(gl, 'createHeaders')
           .withArgs(token)
           .returns({ Authorization: 'Bearer tok' });
       });
       afterEach(() => sinon.restore());
 
       it('throws if diff page 1 fetch fails', async () => {
-        (globalThis as any).fetch = sinon
+        globalWithFetch.fetch = sinon
           .stub()
           .onFirstCall()
           .resolves({ ok: true, json: async () => ({ parent_ids: ['p1'] }) })
@@ -71,9 +72,10 @@ describe('Fetch Logic', () => {
           .resolves({ ok: false, status: 500, statusText: 'Internal Error' });
 
         try {
-          await (gl as any).getCommitDetails(fakeInfo, token);
+          await gl.getCommitDetails(fakeInfo, token);
           expect().fail('Expected error');
-        } catch (err: any) {
+        } catch (err: unknown) {
+          if (!(err instanceof Error)) throw err;
           expect(err.message).to.match(/\[500\] Internal Error/);
         }
       });
@@ -88,9 +90,9 @@ describe('Fetch Logic', () => {
       };
 
       beforeEach(() => {
-        sinon.stub(gl as any, 'getApiUrl').returns('https://gitlab.com/api/v4');
+        sinon.stub(gl, 'getApiUrl').returns('https://gitlab.com/api/v4');
         sinon
-          .stub(gl as any, 'createHeaders')
+          .stub(gl, 'createHeaders')
           .withArgs(token)
           .returns({ Authorization: 'Bearer token' });
 
@@ -128,7 +130,7 @@ describe('Fetch Logic', () => {
       afterEach(() => sinon.restore());
 
       it('handles commit from nested group project', async () => {
-        const result = await (gl as any).getCommitDetails(fakeInfo, token);
+        const result = await gl.getCommitDetails(fakeInfo, token);
         expect(result).to.have.property('sha', 'abc123');
         expect(result.files).to.be.an('array');
         expect(result.files[0].filename).to.equal('file.pkg');
@@ -142,16 +144,16 @@ describe('Fetch Logic', () => {
       const pullInfo = { owner: 'foo', repo: 'bar', pullNumber: '1' };
 
       beforeEach(() => {
-        sinon.stub(gh as any, 'getApiUrl').returns('https://api');
+        sinon.stub(gh, 'getApiUrl').returns('https://api');
         sinon
-          .stub(gh as any, 'createHeaders')
+          .stub(gh, 'createHeaders')
           .withArgs(token)
           .returns({ Authorization: 'token token' });
       });
       afterEach(() => sinon.restore());
 
       it('throws when first page of pull-files is non-ok', async () => {
-        (globalThis as any).fetch = sinon
+        globalWithFetch.fetch = sinon
           .stub()
           .onFirstCall()
           .resolves({ ok: true, json: async () => {} })
@@ -159,9 +161,10 @@ describe('Fetch Logic', () => {
           .resolves({ ok: false, statusText: 'Bad Gateway' });
 
         try {
-          await (gh as any).getPullDetails(pullInfo, token);
+          await gh.getPullDetails(pullInfo, token);
           expect().fail('Expected error');
-        } catch (err: any) {
+        } catch (err: unknown) {
+          if (!(err instanceof Error)) throw err;
           expect(err.message).to.match(
             /Failed to retrieve paginated data \(page 1\): Bad Gateway/,
           );
@@ -169,15 +172,16 @@ describe('Fetch Logic', () => {
       });
 
       it('throws if initial pull metadata fetch fails', async () => {
-        (globalThis as any).fetch = sinon.stub().resolves({
+        globalWithFetch.fetch = sinon.stub().resolves({
           ok: false,
           statusText: 'Not Found',
         });
 
         try {
-          await (gh as any).getPullDetails(pullInfo, token);
+          await gh.getPullDetails(pullInfo, token);
           expect().fail('Expected error not thrown');
-        } catch (err: any) {
+        } catch (err: unknown) {
+          if (!(err instanceof Error)) throw err;
           expect(err.message).to.match(
             /Failed to retrieve pull details: Not Found/,
           );
@@ -190,16 +194,16 @@ describe('Fetch Logic', () => {
       const token = 'tok';
 
       beforeEach(() => {
-        sinon.stub(gl as any, 'getApiUrl').returns('https://gitlab.com/api/v4');
+        sinon.stub(gl, 'getApiUrl').returns('https://gitlab.com/api/v4');
         sinon
-          .stub(gl as any, 'createHeaders')
+          .stub(gl, 'createHeaders')
           .withArgs(token)
           .returns({ Authorization: 'Bearer tok' });
       });
       afterEach(() => sinon.restore());
 
       it('throws if MR diff page 2 fetch fails', async () => {
-        (globalThis as any).fetch = (input: any) => {
+        globalWithFetch.fetch = (input: RequestInfo | { url: string }) => {
           const urlStr = typeof input === 'string' ? input : input.url;
           const u = new URL(urlStr);
 
@@ -234,13 +238,19 @@ describe('Fetch Logic', () => {
             );
           }
 
-          return Promise.reject(new Error('Unexpected fetch ' + urlStr));
+          return Promise.resolve(
+            new Response(null, {
+              status: 500,
+              statusText: 'Unexpected fetch ' + urlStr,
+            }),
+          );
         };
 
         try {
-          await (gl as any).getPullDetails(fakeInfo, token);
+          await gl.getPullDetails(fakeInfo, token);
           expect().fail('Expected error');
-        } catch (err: any) {
+        } catch (err: unknown) {
+          if (!(err instanceof Error)) throw err;
           expect(err.message).to.match(
             /Failed to retrieve paginated data \(page 2\): \[502\] Bad Gateway/,
           );
@@ -248,10 +258,9 @@ describe('Fetch Logic', () => {
       });
 
       it('throws if final merge request metadata fetch fails', async () => {
-        (globalThis as any).fetch = (input: any) => {
+        globalWithFetch.fetch = (input: RequestInfo | { url: string }) => {
           const url = typeof input === 'string' ? input : input.url;
           const u = new URL(url);
-
           if (u.pathname.endsWith('/diffs')) {
             if (u.searchParams.get('page') === '1') {
               return Promise.resolve(
@@ -275,21 +284,27 @@ describe('Fetch Logic', () => {
               );
             }
             return Promise.resolve(
-              new Response(JSON.stringify([]), { status: 200 }),
+              new Response(JSON.stringify([]), {
+                status: 200,
+                headers: new Headers(),
+              }),
             );
           }
 
-          return Promise.resolve({
-            ok: false,
-            status: 404,
-            statusText: 'Not Found',
-          });
+          return Promise.resolve(
+            new Response(null, {
+              status: 404,
+              statusText: 'Not Found',
+              headers: new Headers(),
+            }),
+          );
         };
 
         try {
-          await (gl as any).getPullDetails(fakeInfo, token);
+          await gl.getPullDetails(fakeInfo, token);
           expect().fail('Expected error');
-        } catch (err: any) {
+        } catch (err: unknown) {
+          if (!(err instanceof Error)) throw err;
           expect(err.message).to.match(
             /Failed to retrieve merge request details: \[404\] Not Found/,
           );
@@ -318,6 +333,7 @@ describe('Fetch Logic', () => {
 
     cases.forEach(({ name, Adapter, hostInfo, commitUrl, prUrl }) => {
       describe(`${name} Adapter`, () => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         let adapter: any;
         let fakeFiles: ModifiedFile[];
         let stubCommit: sinon.SinonStub;
@@ -365,7 +381,8 @@ describe('Fetch Logic', () => {
           try {
             await adapter.fetchModifiedFiles('not-a-url', 'token');
             throw new Error('Promise did not reject');
-          } catch (err: any) {
+          } catch (err: unknown) {
+            if (!(err instanceof Error)) throw err;
             expect(err.message).to.match(/Not a valid URL: not-a-url/);
           }
         });
@@ -378,7 +395,8 @@ describe('Fetch Logic', () => {
                 : 'https://gitlab.com/foo/bar/-/issues/1';
             await adapter.fetchModifiedFiles(badUrl, 'token');
             throw new Error('Promise did not reject');
-          } catch (err: any) {
+          } catch (err: unknown) {
+            if (!(err instanceof Error)) throw err;
             expect(err.message).to.match(
               /Not a GitHub commit or pull request page/,
             );
@@ -391,20 +409,26 @@ describe('Fetch Logic', () => {
   describe('test()', () => {
     describe('GitHub Adapter', () => {
       it('returns true when fetch.ok is true', async () => {
-        (globalThis as any).fetch = () => Promise.resolve({ ok: true } as any);
+        globalWithFetch.fetch = () =>
+          Promise.resolve(
+            new Response(null, { status: 200, statusText: 'OK' }),
+          );
         const result = await gh.test('token');
         expect(result).to.equal(true);
       });
 
       it('returns false then fetch.ok is false', async () => {
-        (globalThis as any).fetch = () => Promise.resolve({ ok: false } as any);
+        globalWithFetch.fetch = () =>
+          Promise.resolve(
+            new Response(null, { status: 400, statusText: 'Bad Request' }),
+          );
         const result = await gh.test('token');
         expect(result).to.equal(false);
       });
 
       it('returns false on network error', async () => {
         const errStub = sinon.stub(console, 'error');
-        (globalThis as any).fetch = () => Promise.reject(new Error());
+        globalWithFetch.fetch = () => Promise.reject(new Error());
         const result = await gh.test('token');
         expect(result).to.equal(false);
         errStub.restore();
@@ -413,43 +437,45 @@ describe('Fetch Logic', () => {
 
     describe('GitLab Adapter', () => {
       it('returns true on 200 OK', async () => {
-        (globalThis as any).fetch = () =>
-          Promise.resolve({
-            ok: true,
-            status: 200,
-            headers: { get: (_: string) => null },
-          } as any);
+        globalWithFetch.fetch = () =>
+          Promise.resolve(
+            new Response(null, {
+              status: 200,
+              headers: new Headers(),
+            }),
+          );
         const result = await gl.test('token');
         expect(result).to.equal(true);
       });
 
       it('returns true on 403 with x-gitlab-meta header', async () => {
-        (globalThis as any).fetch = () =>
-          Promise.resolve({
-            ok: false,
-            status: 403,
-            headers: {
-              get: (name: string) => (name === 'x-gitlab-meta' ? 'yes' : null),
-            },
-          } as any);
+        globalWithFetch.fetch = () =>
+          Promise.resolve(
+            new Response(null, {
+              status: 403,
+              headers: { 'x-gitlab-meta': 'yes' },
+            }),
+          );
         const result = await gl.test('token');
         expect(result).to.equal(true);
       });
 
       it('returns false on 403 without x-gitlab-meta header', async () => {
-        (globalThis as any).fetch = () =>
-          Promise.resolve({
-            ok: false,
-            status: 403,
-            headers: { get: () => null },
-          } as any);
+        globalWithFetch.fetch = () =>
+          Promise.resolve(
+            new Response(null, {
+              status: 403,
+              statusText: 'Forbidden',
+              headers: new Headers(),
+            }),
+          );
         const result = await gl.test('token');
         expect(result).to.equal(false);
       });
 
       it('returns false on network error', async () => {
         const errStub = sinon.stub(console, 'error');
-        (globalThis as any).fetch = () => Promise.reject(new Error());
+        globalWithFetch.fetch = () => Promise.reject(new Error());
         const result = await gl.test('token');
         expect(result).to.equal(false);
         errStub.restore();

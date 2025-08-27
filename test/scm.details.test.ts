@@ -1,11 +1,9 @@
-import { scmAdapters } from '../src/scm.js';
 import expect from 'expect.js';
-
-const gh = new scmAdapters.github({ host: 'github.com', scm: 'github' });
-const gl = new scmAdapters.gitlab({ host: 'gitlab.com', scm: 'gitlab' });
+import { createScmAdaptersForTests, globalWithFetch } from './utils.js';
+const { gh, gl } = createScmAdaptersForTests();
 
 function mockGithubPullFetch(fileCount = 120) {
-  (globalThis as any).fetch = (input: any) => {
+  globalWithFetch.fetch = (input: RequestInfo | { url: string }) => {
     const url = typeof input === 'string' ? input : input.url;
     if (
       url.startsWith('https://api.github.com/repos/foo/bar/pulls/1') &&
@@ -72,7 +70,7 @@ const GITLAB_FILE_BASE = {
 };
 
 function mockGitlabCommitFetch(fileCount = 120) {
-  (globalThis as any).fetch = (input: any) => {
+  globalWithFetch.fetch = (input: RequestInfo | { url: string }) => {
     const url = typeof input === 'string' ? input : input.url;
 
     if (
@@ -116,7 +114,7 @@ function mockGitlabCommitFetch(fileCount = 120) {
 }
 
 function mockGitlabPullFetch(fileCount = 120) {
-  (globalThis as any).fetch = (input: any) => {
+  globalWithFetch.fetch = (input: RequestInfo | { url: string }) => {
     const url = typeof input === 'string' ? input : input.url;
     const u = new URL(url);
 
@@ -165,7 +163,7 @@ function mockGitlabPullFetch(fileCount = 120) {
 }
 
 function clearFetchMock() {
-  delete (globalThis as any).fetch;
+  delete globalWithFetch.fetch;
 }
 
 describe('Commit and Pull Details', () => {
@@ -177,7 +175,7 @@ describe('Commit and Pull Details', () => {
 
       it('collects all files across pull request pages (pagination)', async () => {
         mockGithubPullFetch(120);
-        const prData = await (gh as any).getPullDetails(fakePullInfo, 'token');
+        const prData = await gh.getPullDetails(fakePullInfo, 'token');
         expect(prData.info.base.sha).to.equal('baseSha');
         expect(prData.info.head.sha).to.equal('headSha');
         expect(prData.files).to.have.length(120);
@@ -187,7 +185,7 @@ describe('Commit and Pull Details', () => {
 
       it('collects all files when only one page is returned (no pagination)', async () => {
         mockGithubPullFetch(5);
-        const prData = await (gh as any).getPullDetails(fakePullInfo, 'token');
+        const prData = await gh.getPullDetails(fakePullInfo, 'token');
         expect(prData.info.base.sha).to.equal('baseSha');
         expect(prData.info.head.sha).to.equal('headSha');
         expect(prData.files).to.have.length(5);
@@ -209,10 +207,7 @@ describe('Commit and Pull Details', () => {
 
       it('collects all files across commit pages (pagination)', async () => {
         mockGitlabCommitFetch(120);
-        const commitData = await (gl as any).getCommitDetails(
-          fakeCommitInfo,
-          'token',
-        );
+        const commitData = await gl.getCommitDetails(fakeCommitInfo, 'token');
         expect(commitData.sha).to.equal('123abc');
         expect(commitData.parents[0].sha).to.equal('p1');
         expect(commitData.files).to.have.length(120);
@@ -220,10 +215,7 @@ describe('Commit and Pull Details', () => {
 
       it('collects all files when only one page is returned (no pagination)', async () => {
         mockGitlabCommitFetch(5);
-        const commitData = await (gl as any).getCommitDetails(
-          fakeCommitInfo,
-          'token',
-        );
+        const commitData = await gl.getCommitDetails(fakeCommitInfo, 'token');
         expect(commitData.sha).to.equal('123abc');
         expect(commitData.parents[0].sha).to.equal('p1');
         expect(commitData.files).to.have.length(5);
@@ -237,7 +229,7 @@ describe('Commit and Pull Details', () => {
 
       it('collects all files across merge request pages (pagination)', async () => {
         mockGitlabPullFetch(120);
-        const mrData = await (gl as any).getPullDetails(fakePullInfo, 'token');
+        const mrData = await gl.getPullDetails(fakePullInfo, 'token');
         expect(mrData.info.base.sha).to.equal('baseSha');
         expect(mrData.info.head.sha).to.equal('headSha');
         expect(mrData.files).to.have.length(120);
@@ -247,7 +239,7 @@ describe('Commit and Pull Details', () => {
 
       it('collects all files when only one page is returned (no pagination)', async () => {
         mockGitlabPullFetch(5);
-        const mrData = await (gl as any).getPullDetails(fakePullInfo, 'token');
+        const mrData = await gl.getPullDetails(fakePullInfo, 'token');
         expect(mrData.info.base.sha).to.equal('baseSha');
         expect(mrData.info.head.sha).to.equal('headSha');
         expect(mrData.files).to.have.length(5);

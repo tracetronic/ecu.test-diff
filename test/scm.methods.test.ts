@@ -38,12 +38,14 @@ describe('Adapter Methods', () => {
         scm,
       }) => {
         it(`${name} default host returns correct API URL`, () => {
-          const adapter = new Class({ host, scm });
-          expect((adapter as any).getApiUrl()).to.equal(expectedApiUrl);
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          const adapter: any = new Class({ host, scm });
+          expect(adapter.getApiUrl()).to.equal(expectedApiUrl);
         });
         it(`${name} custom host returns correct API URL`, () => {
-          const adapter = new Class({ host: customHost, scm });
-          expect((adapter as any).getApiUrl()).to.equal(expectedCustomApiUrl);
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          const adapter: any = new Class({ host: customHost, scm });
+          expect(adapter.getApiUrl()).to.equal(expectedCustomApiUrl);
         });
       },
     );
@@ -52,8 +54,9 @@ describe('Adapter Methods', () => {
   describe('createHeaders()', () => {
     adapterCases.forEach(({ name, Class, host, tokenPrefix, scm }) => {
       it(`${name} adds correct Authorization header`, () => {
-        const adapter = new Class({ host, scm });
-        const headers = (adapter as any).createHeaders('abc123');
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const adapter: any = new Class({ host, scm });
+        const headers = adapter.createHeaders('abc123');
         expect(headers).to.have.property(
           'Authorization',
           `${tokenPrefix} abc123`,
@@ -64,19 +67,16 @@ describe('Adapter Methods', () => {
 
   describe('isSupportedFile()', () => {
     adapterCases.forEach(({ name, Class, host, scm }) => {
-      const adapter = new Class({ host, scm });
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const adapter: any = new Class({ host, scm });
       it(`${name} returns true for supported extensions`, () => {
         SUPPORTED_FILES.forEach((ext) => {
-          expect((adapter as any).isSupportedFile(`file.${ext}`)).to.equal(
-            true,
-          );
+          expect(adapter.isSupportedFile(`file.${ext}`)).to.equal(true);
         });
       });
       it(`${name} returns false for unsupported or missing extensions`, () => {
-        expect((adapter as any).isSupportedFile('file.unknownext')).to.equal(
-          false,
-        );
-        expect((adapter as any).isSupportedFile('file')).to.equal(false);
+        expect(adapter.isSupportedFile('file.unknownext')).to.equal(false);
+        expect(adapter.isSupportedFile('file')).to.equal(false);
       });
     });
   });

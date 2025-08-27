@@ -1,10 +1,8 @@
-import { scmAdapters } from '../src/scm.js';
 import { ModifiedFile } from '../src/types.ts';
 import expect from 'expect.js';
 import sinon, { SinonStub } from 'sinon';
-
-const gh = new scmAdapters.github({ host: 'github.com', scm: 'github' });
-const gl = new scmAdapters.gitlab({ host: 'gitlab.com', scm: 'gitlab' });
+import { createScmAdaptersForTests } from './utils.ts';
+const { gh, gl } = createScmAdaptersForTests();
 
 describe('Mapping & Filtering (response files to internal files)', () => {
   describe('handleCommit()', () => {
@@ -44,12 +42,13 @@ describe('Mapping & Filtering (response files to internal files)', () => {
       };
 
       beforeEach(() => {
-        sinon.stub(gh as any, 'getCommitDetails').resolves(fakeApiResponse);
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        sinon.stub(gh, 'getCommitDetails').resolves(fakeApiResponse as any);
       });
       afterEach(() => sinon.restore());
 
       it('filters and maps commit files correctly', async () => {
-        const result = await (gh as any).handleCommit(fakeCommitInfo, 'token');
+        const result = await gh.handleCommit(fakeCommitInfo, 'token');
         expect(result).to.have.length(1);
         const mf: ModifiedFile = result[0];
         expect(mf.filename).to.equal('keep.pkg');
@@ -66,12 +65,13 @@ describe('Mapping & Filtering (response files to internal files)', () => {
       });
 
       it('throws if commitData.files is missing or not an array', async () => {
-        ((gh as any).getCommitDetails as SinonStub).restore();
+        (gh.getCommitDetails as SinonStub).restore();
         const stub = sinon
-          .stub(gh as any, 'getCommitDetails')
+          .stub(gh, 'getCommitDetails')
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           .resolves({ sha: 'sha', parents: [{ sha: 'parentSha' }] } as any);
         try {
-          await (gh as any).handleCommit(fakeCommitInfo, 'token');
+          await gh.handleCommit(fakeCommitInfo, 'token');
           throw new Error('Promise did not reject');
         } catch (err) {
           expect(err.message).to.match(/Unable to retrieve modified files/);
@@ -104,12 +104,12 @@ describe('Mapping & Filtering (response files to internal files)', () => {
       };
 
       beforeEach(() => {
-        sinon.stub(gl as any, 'getCommitDetails').resolves(fakeApiResponse);
+        sinon.stub(gl, 'getCommitDetails').resolves(fakeApiResponse);
       });
       afterEach(() => sinon.restore());
 
       it('processes stats correctly', async () => {
-        const result = await (gl as any).handleCommit(fakeCommitInfo, 'token');
+        const result = await gl.handleCommit(fakeCommitInfo, 'token');
         expect(result).to.have.length(1);
         const mf: ModifiedFile = result[0];
         expect(mf.filename).to.equal('keep.pkg');
@@ -130,12 +130,13 @@ describe('Mapping & Filtering (response files to internal files)', () => {
       });
 
       it('throws if commitData.files is missing or not an array', async () => {
-        ((gl as any).getCommitDetails as SinonStub).restore();
+        (gl.getCommitDetails as SinonStub).restore();
         const stub = sinon
-          .stub(gl as any, 'getCommitDetails')
+          .stub(gl, 'getCommitDetails')
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           .resolves({ sha: 'sha', parents: [{ sha: 'parentSha' }] } as any);
         try {
-          await (gl as any).handleCommit(fakeCommitInfo, 'token');
+          await gl.handleCommit(fakeCommitInfo, 'token');
           throw new Error('Promise did not reject');
         } catch (err) {
           expect(err.message).to.match(/Unable to retrieve modified files/);
@@ -178,12 +179,13 @@ describe('Mapping & Filtering (response files to internal files)', () => {
       };
 
       beforeEach(() => {
-        sinon.stub(gh as any, 'getPullDetails').resolves(fakeApiResponse);
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        sinon.stub(gh, 'getPullDetails').resolves(fakeApiResponse as any);
       });
       afterEach(() => sinon.restore());
 
       it('filters and maps pull request files correctly', async () => {
-        const result: ModifiedFile[] = await (gh as any).handlePullRequest(
+        const result: ModifiedFile[] = await gh.handlePullRequest(
           fakePullInfo,
           'token',
         );
@@ -221,12 +223,12 @@ describe('Mapping & Filtering (response files to internal files)', () => {
       };
 
       beforeEach(() => {
-        sinon.stub(gl as any, 'getPullDetails').resolves(fakeApiResponse);
+        sinon.stub(gl, 'getPullDetails').resolves(fakeApiResponse);
       });
       afterEach(() => sinon.restore());
 
       it('maps merge request files correctly', async () => {
-        const result: ModifiedFile[] = await (gl as any).handlePullRequest(
+        const result: ModifiedFile[] = await gl.handlePullRequest(
           fakePullInfo,
           'token',
         );

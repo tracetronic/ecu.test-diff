@@ -62,7 +62,7 @@ type GitlabChange = {
   generated_file: boolean | null;
 };
 
-abstract class BaseScmAdapter {
+export abstract class BaseScmAdapter {
   hostInfo: HostInfo;
   constructor(hostInfo: HostInfo) {
     this.hostInfo = hostInfo;

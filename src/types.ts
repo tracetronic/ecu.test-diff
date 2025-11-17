@@ -1,15 +1,31 @@
-export const SUPPORTED_DIFF_FILES = ['pkg', 'ta', 'prj', 'xam', 'ppd', 'mask', 'gcd', 'tcf', 'tbc'];
+export const SUPPORTED_DIFF_FILES = [
+  'pkg',
+  'ta',
+  'prj',
+  'xam',
+  'ppd',
+  'mask',
+  'gcd',
+  'tcf',
+  'tbc',
+];
 export const SUPPORTED_FILES = [...SUPPORTED_DIFF_FILES, 'trf'];
 
 export type HostInfo = {
-  scm: 'gitlab' | 'github' | null;
+  scm: 'gitlab' | 'github' | 'bitbucket' | null;
   host: string;
 };
 
+export enum AuthType {
+  Basic = 'basic',
+  Bearer = 'bearer',
+}
+
 export type ScmHost = {
-  scm: 'gitlab' | 'github';
+  scm: 'gitlab' | 'github' | 'bitbucket';
   host: string;
   token: string | null;
+  authType?: AuthType;
 };
 
 export enum ErrorType {

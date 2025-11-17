@@ -1,10 +1,10 @@
-import { scmAdapters } from '../src/scm.js';
 import { ModifiedFile } from '../src/types.ts';
 import expect from 'expect.js';
 import sinon from 'sinon';
 import { createScmAdaptersForTests, globalWithFetch } from './utils.ts';
+import { scmAdapters } from '../src/scm/index.ts';
 
-const { gh, gl } = createScmAdaptersForTests();
+const { gh, gl, bb } = createScmAdaptersForTests();
 
 describe('Fetch Logic', () => {
   describe('getCommitDetails()', () => {
@@ -44,7 +44,7 @@ describe('Fetch Logic', () => {
         } catch (err: unknown) {
           if (!(err instanceof Error)) throw err;
           expect(err.message).to.match(
-            /Failed to retrieve commit details: Not Found/,
+            /Failed to retrieve commit details. An unknown error occurred./,
           );
         }
       });
@@ -76,7 +76,7 @@ describe('Fetch Logic', () => {
           expect().fail('Expected error');
         } catch (err: unknown) {
           if (!(err instanceof Error)) throw err;
-          expect(err.message).to.match(/\[500\] Internal Error/);
+          expect(err.message).to.match(/Failed to retrieve paginated data \(page 1\). An unknown error occurred./);
         }
       });
     });
@@ -136,6 +136,79 @@ describe('Fetch Logic', () => {
         expect(result.files[0].filename).to.equal('file.pkg');
       });
     });
+
+    context('BitBucket', () => {
+      const fakeInfo = { owner: 'foo', repo: 'bar', commitHash: '123abc' };
+      const token = 'token';
+
+      beforeEach(() => {
+        sinon.stub(bb, 'getApiUrl').returns('https://api.bitbucket.org/2.0');
+        sinon
+          .stub(bb, 'createHeaders')
+          .withArgs(token)
+          .returns({ Authorization: 'Bearer token' });
+      });
+      afterEach(() => sinon.restore());
+
+      it('throws if single commit request is not ok', async () => {
+        globalThis.fetch = sinon.stub().resolves({
+          ok: false,
+          status: 404,
+          statusText: 'Not Found',
+        });
+
+        try {
+          await bb.getCommitDetails(fakeInfo, token);
+          expect().fail('Expected error was not thrown');
+        } catch (err: any) {
+          expect(err.message).to.match(
+            /Failed to retrieve commit details. Not found: You may not have access to this repository./,
+          );
+        }
+      });
+
+      it('throws when a diffstat page fails (pagination error)', async () => {
+        globalThis.fetch = sinon
+          .stub()
+          .onFirstCall()
+          .resolves({
+            ok: true,
+            json: async () => ({
+              hash: '123abc',
+              parents: [{ hash: 'parentsha' }],
+            }),
+          })
+          .onSecondCall()
+          .resolves({
+            ok: true,
+            json: async () => ({
+              values: Array.from({ length: 100 }, () => ({
+                status: 'modified',
+                lines_added: 1,
+                lines_removed: 1,
+                new: { path: 'f.pkg' },
+                old: { path: 'f.pkg' },
+              })),
+              next: 'https://api.bitbucket.org/2.0/repositories/foo%2Fbar/diffstat/123abc?page=2',
+            }),
+          })
+          .onThirdCall()
+          .resolves({
+            ok: false,
+            status: 502,
+            statusText: 'Bad Gateway',
+          });
+
+        try {
+          await bb.getCommitDetails(fakeInfo, token);
+          expect().fail('Expected error was not thrown');
+        } catch (err: any) {
+          expect(err.message).to.match(
+            /Failed to retrieve paginated data. An unknown error occurred./,
+          );
+        }
+      });
+    });
   });
 
   describe('getPullDetails()', () => {
@@ -166,7 +239,7 @@ describe('Fetch Logic', () => {
         } catch (err: unknown) {
           if (!(err instanceof Error)) throw err;
           expect(err.message).to.match(
-            /Failed to retrieve paginated data \(page 1\): Bad Gateway/,
+            /Failed to retrieve paginated data \(page 1\). An unknown error occurred./,
           );
         }
       });
@@ -183,7 +256,7 @@ describe('Fetch Logic', () => {
         } catch (err: unknown) {
           if (!(err instanceof Error)) throw err;
           expect(err.message).to.match(
-            /Failed to retrieve pull details: Not Found/,
+            /Failed to retrieve pull request details. An unknown error occurred./,
           );
         }
       });
@@ -252,7 +325,7 @@ describe('Fetch Logic', () => {
         } catch (err: unknown) {
           if (!(err instanceof Error)) throw err;
           expect(err.message).to.match(
-            /Failed to retrieve paginated data \(page 2\): \[502\] Bad Gateway/,
+            /Failed to retrieve paginated data \(page 2\). An unknown error occurred./,
           );
         }
       });
@@ -306,7 +379,38 @@ describe('Fetch Logic', () => {
         } catch (err: unknown) {
           if (!(err instanceof Error)) throw err;
           expect(err.message).to.match(
-            /Failed to retrieve merge request details: \[404\] Not Found/,
+            /Failed to retrieve merge request details. Not found: You may not have access to this repository./,
+          );
+        }
+      });
+    });
+
+    context('BitBucket', () => {
+      const fakeInfo = { owner: 'foo', repo: 'bar', pullNumber: '1' };
+      const token = 'token';
+
+      beforeEach(() => {
+        sinon.stub(bb, 'getApiUrl').returns('https://api.bitbucket.org/2.0');
+        sinon
+          .stub(bb, 'createHeaders')
+          .withArgs(token)
+          .returns({ Authorization: 'Bearer token' });
+      });
+      afterEach(() => sinon.restore());
+
+      it('throws when the pull request metadata request is not ok', async () => {
+        globalThis.fetch = sinon.stub().resolves({
+          ok: false,
+          status: 403,
+          statusText: 'Forbidden',
+        });
+
+        try {
+          await bb.getPullDetails(fakeInfo, token);
+          expect().fail('Expected error was not thrown');
+        } catch (err: any) {
+          expect(err.message).to.match(
+            /Failed to retrieve pull request details. Forbidden: Your credentials lack one or more required privilege scopes./,
           );
         }
       });
@@ -328,6 +432,13 @@ describe('Fetch Logic', () => {
         commitUrl: 'https://gitlab.com/foo/bar/-/commit/123abc',
         prUrl: 'https://gitlab.com/foo/bar/-/merge_requests/1',
         hostInfo: { host: 'gitlab.com', scm: 'gitlab' as const },
+      },
+      {
+        name: 'BitBucket',
+        Adapter: scmAdapters.bitbucket,
+        commitUrl: 'https://bitbucket.org/foo/bar/commits/123abc',
+        prUrl: 'https://bitbucket.org/foo/bar/pull-requests/1',
+        hostInfo: { host: 'bitbucket.org', scm: 'bitbucket' as const },
       },
     ];
 
@@ -398,7 +509,7 @@ describe('Fetch Logic', () => {
           } catch (err: unknown) {
             if (!(err instanceof Error)) throw err;
             expect(err.message).to.match(
-              /Not a GitHub commit or pull request page/,
+              /Not a commit or pull request page/,
             );
           }
         });
@@ -477,6 +588,34 @@ describe('Fetch Logic', () => {
         const errStub = sinon.stub(console, 'error');
         globalWithFetch.fetch = () => Promise.reject(new Error());
         const result = await gl.test('token');
+        expect(result).to.equal(false);
+        errStub.restore();
+      });
+    });
+
+    describe('Bitbucket Adapter', () => {
+      it('returns true when status is 200', async () => {
+        globalThis.fetch = () => Promise.resolve({ status: 200 } as any);
+        const result = await bb.test('token');
+        expect(result).to.equal(true);
+      });
+
+      it('returns false when status is 403 (valid token, missing scope)', async () => {
+        globalThis.fetch = () => Promise.resolve({ status: 403 } as any);
+        const result = await bb.test('token');
+        expect(result).to.equal(true);
+      });
+
+      it('returns false when status is 401 (invalid credentials)', async () => {
+        globalThis.fetch = () => Promise.resolve({ status: 401 } as any);
+        const result = await bb.test('token');
+        expect(result).to.equal(false);
+      });
+
+      it('returns false on network error', async () => {
+        const errStub = sinon.stub(console, 'error');
+        globalThis.fetch = () => Promise.reject(new Error());
+        const result = await bb.test('token');
         expect(result).to.equal(false);
         errStub.restore();
       });

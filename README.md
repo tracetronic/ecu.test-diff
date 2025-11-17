@@ -29,6 +29,7 @@ Supported SCM platforms:
 
 - GitHub
 - GitLab
+- Bitbucket Cloud
 
 Supported entry points
 
@@ -81,7 +82,7 @@ You are good to go! You can also pin the extension to the toolbar for easy acces
 
 - Open a commit or merge request on your SCM platform. Open the extension popup dialog
 - Select the correct platform type and add the host
-- Go to the options e.g., via click on the cog-wheel icon
+- You will be redirected to the options page, where the configuration dialog opens up
 - Now enter your API token
 
   - ⚠️Don\'t give the token all permissions, use fine-grained personal access tokens (if possible) ⚠️
@@ -100,9 +101,25 @@ You are good to go! You can also pin the extension to the toolbar for easy acces
         3. Select `Personal access tokens` - `Fine-grained tokens`
         4. Select `Generate new token`
         5. Set `Repository access` as desired. If you give access to non-public repositories, make sure to grant `Repository permissions` for `Content` (read-only) and `Pull requests` (read-only)
-      - GitLab 1. Go to `Settings` - `Access tokens` in the relevant group or repository 2. Select `Add new token` 3. Set **Scope** to `read_api`, select a **Role** that is allowed to access code and changes
+      - GitLab 
+        1. Go to `Settings` - `Access tokens` in the relevant group or repository 
+        2. Select `Add new token` 
+        3. Set **Scope** to `read_api`, select a **Role** that is allowed to access code and changes
+      - Bitbucket Cloud
+        - Personal access tokens
+          1. Log in to https://id.atlassian.com/manage-profile/security/api-tokens.
+          2. Select **Create API token with scopes**.
+          3. Select **`read:repository:bitbucket`** and **`read:pullrequest:bitbucket`** scopes.
+          >*When using a Bitbucket personal access token, you must also provide the email address that belongs to the token in the extension’s configuration dialog.*
+        - Workspace/Project/Repository access tokens
+          1. At https://bitbucket.org, navigate to the workspace, project or repository that you want the token to have access to.
+          2. Open the corresponding **workspace**, **project** or **repository settings**.
+          3. On the sidebar, under **Security**, select **Access tokens**.
+          4. Select **Create access tokens**.
+          5. Select **`repository`** and **`pullrequest`** permissions.
     </details>
-    <img style="display: block; alight: left" src="./docs/images/firefox/configuration.png" alt="Configuration" width="800"/>
+    <img style="display: block; alight: left" src="./docs/images/chrome/add_host_dialog.png" alt="Add host dialog" width="600"/>
+    <img style="display: block; alight: left" src="./docs/images/chrome/configuration.png" alt="Configuration" width="600"/>
 
 - Save the settings
 - Go back to the commit page and open the popup again
@@ -110,12 +127,12 @@ You are good to go! You can also pin the extension to the toolbar for easy acces
 - Files that cannot be diffed with the ecu.test Diff-Viewer can still be opened individually for both the old and new versions
 - Click on a file and click on "Show new" or "Show old"
 
-  <img style="display: block; alight: left" src="./docs/images/firefox/dialog_download.png" alt="Configuration Download" width="600"/>
+  <img style="display: block; alight: left" src="./docs/images/chrome/dialog_download.png" alt="Configuration Download" width="600"/>
 
 - Files supported by the ecu.test Diff-Viewer will open directly in the viewer
 - Click on a file and click on "Show diff"
 
-  <img style="display: block; alight: left" src="./docs/images/firefox/dialog.png" alt="Configuration" width="600"/>
+  <img style="display: block; alight: left" src="./docs/images/chrome/dialog.png" alt="Configuration" width="600"/>
 
 - ecu.test Diff-Viewer will be opened
 

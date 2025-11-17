@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Open with ecu.test diff",
-  "description": "Extension to open the ecu.test/trace.check diff viewer on GitHub/GitLab.",
+  "description": "Extension to open the ecu.test/trace.check diff viewer on GitHub/GitLab/Bitbucket Cloud.",
   "version": "1.1.0.0",
   "background": {},
   "browser_specific_settings": {

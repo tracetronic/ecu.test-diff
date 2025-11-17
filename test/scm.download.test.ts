@@ -1,9 +1,9 @@
-import { scmAdapters } from '../src/scm.js';
 import { ModifiedFile } from '../src/types.ts';
 
 import expect from 'expect.js';
 import sinon, { SinonStub } from 'sinon';
 import browser from 'webextension-polyfill';
+import { scmAdapters } from '../src/scm/index.ts';
 
 type DownloadDelta = { id: number; state: { current: string } };
 type DownloadDeltaCallback = (delta: DownloadDelta) => void;
@@ -86,21 +86,16 @@ describe('Download helpers', () => {
         .stub(adapter, 'doDownload')
         .resolves('/tmp/diff/file.ext');
       const out = await adapter['downloadDummy']('path/to/file.ext', '.X');
-      expect(
-        ddSpy.calledWith(
-          'data:text/ext;charset=utf-8,',
-          'diff/file/file.X.ext',
-        ),
-      ).to.equal(true);
+      expect(ddSpy.calledWith('blob://fake', 'diff/file/file.X.ext')).to.equal(
+        true,
+      );
       expect(out).to.equal('/tmp/diff/file.ext');
     });
 
     it('uses correct mime type', async () => {
       const spy = sandbox.stub(adapter, 'doDownload');
       await adapter['downloadDummy']('some/path/file.ext', '.X');
-      expect(
-        spy.calledWith('data:text/ext;charset=utf-8,', 'diff/file/file.X.ext'),
-      ).to.be(true);
+      expect(spy.calledWith('blob://fake', 'diff/file/file.X.ext')).to.be(true);
     });
   });
 

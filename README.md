@@ -84,14 +84,17 @@ You are good to go! You can also pin the extension to the toolbar for easy acces
 - Go to the options e.g., via click on the cog-wheel icon
 - Now enter your API token
 
-  - ⚠️Don\'t give the token all permissions, use fine-grained tokens ⚠️
+  - ⚠️Don\'t give the token all permissions, use fine-grained personal access tokens (if possible) ⚠️
   - Only reading repository commits and pull requests and API access
     <details>
       <summary >
         How to create an API token with <b>required minimal access</b>
       </summary>
-      
-      - GitHub
+
+      - GitHub (see [GitHub Docs]("https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens"))
+
+        Using **fine-grained personal access tokens** is recommended. The have some [**limitations**](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens#fine-grained-personal-access-tokens-limitations) (e.g. access a repository where you are only contributor). If you encounter a limitation, try out **Personal access tokens (classic)**.
+
         1. Go to your profile settings
         2. Go to `Developer Settings`
         3. Select `Personal access tokens` - `Fine-grained tokens`

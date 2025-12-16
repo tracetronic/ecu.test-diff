@@ -91,7 +91,7 @@ You are good to go! You can also pin the extension to the toolbar for easy acces
         How to create an API token with <b>required minimal access</b>
       </summary>
 
-      - GitHub (see [GitHub Docs]("https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens"))
+      - GitHub (see [GitHub Docs](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens) )
 
         Using **fine-grained personal access tokens** is recommended. The have some [**limitations**](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens#fine-grained-personal-access-tokens-limitations) (e.g. access a repository where you are only contributor). If you encounter a limitation, try out **Personal access tokens (classic)**.
 

@@ -6,7 +6,10 @@
   "background": {},
   "browser_specific_settings": {
     "gecko": {
-      "id": "open-with-ecu-test-diff@tracetronic.com"
+      "id": "open-with-ecu-test-diff@tracetronic.com",
+      "data_collection_permissions": {
+        "required": ["none"]
+      }
     }
   },
   "permissions": ["storage", "activeTab", "downloads"],

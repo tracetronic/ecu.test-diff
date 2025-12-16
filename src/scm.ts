@@ -472,7 +472,7 @@ class Github extends BaseScmAdapter {
           shaNew: pullData.info.head.sha,
           download: {
             type: 'json' as const,
-            old: `${baseApiUrl}/contents/${file.filename}?ref=${shaOld}`,
+            old: `${baseApiUrl}/contents/${filenameOld}?ref=${shaOld}`,
             new: `${baseApiUrl}/contents/${file.filename}?ref=${pullData.info.head.sha}`,
           },
         };

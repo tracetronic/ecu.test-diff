@@ -17,8 +17,8 @@ describe('Mapping & Filtering (response files to internal files)', () => {
         parents: [{ sha: 'parentSha' }],
         files: [
           {
-            filename: 'keep.pkg',
-            previous_filename: 'oldKeep.pkg',
+            filename: 'nested/keep.pkg',
+            previous_filename: 'nested-old/oldKeep.pkg',
             additions: 2,
             deletions: 1,
             status: 'renamed',
@@ -51,16 +51,18 @@ describe('Mapping & Filtering (response files to internal files)', () => {
         const result = await gh.handleCommit(fakeCommitInfo, 'token');
         expect(result).to.have.length(1);
         const mf: ModifiedFile = result[0];
-        expect(mf.filename).to.equal('keep.pkg');
-        expect(mf.filenameOld).to.equal('oldKeep.pkg');
+        expect(mf.filename).to.equal('nested/keep.pkg');
+        expect(mf.filenameOld).to.equal('nested-old/oldKeep.pkg');
         expect(mf.additions).to.equal(2);
         expect(mf.deletions).to.equal(1);
         expect(mf.renamed).to.equal(true);
         expect(mf.shaOld).to.equal('parentSha');
         expect(mf.shaNew).to.equal('sha');
-        expect(mf.download.new).to.match(/contents\/keep\.pkg\?ref=sha$/);
+        expect(mf.download.new).to.match(
+          /contents\/nested\/keep\.pkg\?ref=sha$/,
+        );
         expect(mf.download.old).to.match(
-          /contents\/oldKeep\.pkg\?ref=parentSha$/,
+          /contents\/nested-old\/oldKeep\.pkg\?ref=parentSha$/,
         );
       });
 
@@ -92,8 +94,8 @@ describe('Mapping & Filtering (response files to internal files)', () => {
         parents: [{ sha: 'parentSha' }],
         files: [
           {
-            filename: 'keep.pkg',
-            filenameOld: 'oldKeep.pkg',
+            filename: 'nested/keep.pkg',
+            filenameOld: 'nested-old/oldKeep.pkg',
             new: false,
             renamed: true,
             deleted: false,
@@ -112,8 +114,8 @@ describe('Mapping & Filtering (response files to internal files)', () => {
         const result = await gl.handleCommit(fakeCommitInfo, 'token');
         expect(result).to.have.length(1);
         const mf: ModifiedFile = result[0];
-        expect(mf.filename).to.equal('keep.pkg');
-        expect(mf.filenameOld).to.equal('oldKeep.pkg');
+        expect(mf.filename).to.equal('nested/keep.pkg');
+        expect(mf.filenameOld).to.equal('nested-old/oldKeep.pkg');
         expect(mf.additions).to.equal(2);
         expect(mf.deletions).to.equal(1);
         expect(mf.new).to.equal(false);
@@ -122,10 +124,10 @@ describe('Mapping & Filtering (response files to internal files)', () => {
         expect(mf.shaOld).to.equal('parentSha');
         expect(mf.shaNew).to.equal('sha');
         expect(mf.download.new).to.match(
-          /repository\/files\/keep\.pkg\/raw\?ref=sha$/,
+          /repository\/files\/nested%2fkeep\.pkg\/raw\?ref=sha$/,
         );
         expect(mf.download.old).to.match(
-          /repository\/files\/oldKeep\.pkg\/raw\?ref=parentSha$/,
+          /repository\/files\/nested-old%2foldKeep\.pkg\/raw\?ref=parentSha$/,
         );
       });
 
@@ -200,7 +202,9 @@ describe('Mapping & Filtering (response files to internal files)', () => {
         expect(mf.renamed).to.equal(true);
         expect(mf.shaOld).to.equal('baseSha');
         expect(mf.shaNew).to.equal('headSha');
-        expect(mf.download.old).to.match(/contents\/keep\.pkg\?ref=baseSha$/);
+        expect(mf.download.old).to.match(
+          /contents\/oldKeep\.pkg\?ref=baseSha$/,
+        );
         expect(mf.download.new).to.match(/contents\/keep\.pkg\?ref=headSha$/);
       });
     });

@@ -74,8 +74,10 @@ describe('Mapping & Filtering (response files to internal files)', () => {
         try {
           await gh.handleCommit(fakeCommitInfo, 'token');
           throw new Error('Promise did not reject');
-        } catch (err: any) {
-          expect(err.message).to.match(/Unable to retrieve modified files/);
+        } catch (err: unknown) {
+          expect((err as Error).message).to.match(
+            /Unable to retrieve modified files/,
+          );
         } finally {
           stub.restore();
         }
@@ -139,8 +141,10 @@ describe('Mapping & Filtering (response files to internal files)', () => {
         try {
           await gl.handleCommit(fakeCommitInfo, 'token');
           throw new Error('Promise did not reject');
-        } catch (err: any) {
-          expect(err.message).to.match(/Unable to retrieve modified files/);
+        } catch (err: unknown) {
+          expect((err as Error).message).to.match(
+            /Unable to retrieve modified files/,
+          );
         } finally {
           stub.restore();
         }
@@ -196,13 +200,19 @@ describe('Mapping & Filtering (response files to internal files)', () => {
         (bb.getCommitDetails as SinonStub).restore();
         const stub = sinon
           .stub(bb, 'getCommitDetails')
-          .resolves({ sha: 'sha', parents: [{ sha: 'parentSha' }] } as any);
+          .resolves({ sha: 'sha', parents: [{ sha: 'parentSha' }] } as {
+            sha: string;
+            parents: { sha: string }[];
+            files: never[];
+          });
 
         try {
           await bb.handleCommit(fakeCommitInfo, 'token');
           throw new Error('Promise did not reject');
-        } catch (err: any) {
-          expect(err.message).to.match(/Unable to retrieve modified files/);
+        } catch (err: unknown) {
+          expect((err as Error).message).to.match(
+            /Unable to retrieve modified files/,
+          );
         } finally {
           stub.restore();
         }

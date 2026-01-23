@@ -76,7 +76,9 @@ describe('Fetch Logic', () => {
           expect().fail('Expected error');
         } catch (err: unknown) {
           if (!(err instanceof Error)) throw err;
-          expect(err.message).to.match(/Failed to retrieve paginated data \(page 1\). An unknown error occurred./);
+          expect(err.message).to.match(
+            /Failed to retrieve paginated data \(page 1\). An unknown error occurred./,
+          );
         }
       });
     });
@@ -160,8 +162,8 @@ describe('Fetch Logic', () => {
         try {
           await bb.getCommitDetails(fakeInfo, token);
           expect().fail('Expected error was not thrown');
-        } catch (err: any) {
-          expect(err.message).to.match(
+        } catch (err: unknown) {
+          expect((err as Error).message).to.match(
             /Failed to retrieve commit details. Not found: You may not have access to this repository./,
           );
         }
@@ -202,8 +204,8 @@ describe('Fetch Logic', () => {
         try {
           await bb.getCommitDetails(fakeInfo, token);
           expect().fail('Expected error was not thrown');
-        } catch (err: any) {
-          expect(err.message).to.match(
+        } catch (err: unknown) {
+          expect((err as Error).message).to.match(
             /Failed to retrieve paginated data. An unknown error occurred./,
           );
         }
@@ -408,8 +410,8 @@ describe('Fetch Logic', () => {
         try {
           await bb.getPullDetails(fakeInfo, token);
           expect().fail('Expected error was not thrown');
-        } catch (err: any) {
-          expect(err.message).to.match(
+        } catch (err: unknown) {
+          expect((err as Error).message).to.match(
             /Failed to retrieve pull request details. Forbidden: Your credentials lack one or more required privilege scopes./,
           );
         }
@@ -508,9 +510,7 @@ describe('Fetch Logic', () => {
             throw new Error('Promise did not reject');
           } catch (err: unknown) {
             if (!(err instanceof Error)) throw err;
-            expect(err.message).to.match(
-              /Not a commit or pull request page/,
-            );
+            expect(err.message).to.match(/Not a commit or pull request page/);
           }
         });
       });
@@ -595,19 +595,19 @@ describe('Fetch Logic', () => {
 
     describe('Bitbucket Adapter', () => {
       it('returns true when status is 200', async () => {
-        globalThis.fetch = () => Promise.resolve({ status: 200 } as any);
+        globalThis.fetch = () => Promise.resolve({ status: 200 } as Response);
         const result = await bb.test('token');
         expect(result).to.equal(true);
       });
 
       it('returns false when status is 403 (valid token, missing scope)', async () => {
-        globalThis.fetch = () => Promise.resolve({ status: 403 } as any);
+        globalThis.fetch = () => Promise.resolve({ status: 403 } as Response);
         const result = await bb.test('token');
         expect(result).to.equal(true);
       });
 
       it('returns false when status is 401 (invalid credentials)', async () => {
-        globalThis.fetch = () => Promise.resolve({ status: 401 } as any);
+        globalThis.fetch = () => Promise.resolve({ status: 401 } as Response);
         const result = await bb.test('token');
         expect(result).to.equal(false);
       });

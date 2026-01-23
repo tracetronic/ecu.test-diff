@@ -8,8 +8,8 @@ describe('Pagination', () => {
     const fakePullInfo = { owner: 'foo', repo: 'bar', pullNumber: '1' };
 
     beforeEach(() => {
-      globalThis.fetch = (input: any) => {
-        const url = typeof input === 'string' ? input : input.url;
+      globalThis.fetch = (input: URL | RequestInfo) => {
+        const url = typeof input === 'string' ? input : (input as Request).url;
         if (
           url.startsWith('https://api.github.com/repos/foo/bar/pulls/1') &&
           !url.includes('/files')
@@ -47,7 +47,7 @@ describe('Pagination', () => {
     });
 
     afterEach(() => {
-      delete (globalThis as any).fetch;
+      delete (globalThis as { fetch?: CallableFunction }).fetch;
     });
 
     it('collects all files across pull request pages', async () => {
@@ -69,8 +69,8 @@ describe('Pagination', () => {
       };
 
       beforeEach(() => {
-        (globalThis as any).fetch = (input: any) => {
-          const url = typeof input === 'string' ? input : input.url;
+        (globalThis as { fetch?: CallableFunction }).fetch = (input: URL | RequestInfo) => {
+          const url = typeof input === 'string' ? input : (input as Request).url;
           if (
             url ===
             'https://gitlab.com/api/v4/projects/foo%2Fbar/repository/commits/123abc'
@@ -107,7 +107,7 @@ describe('Pagination', () => {
       });
 
       afterEach(() => {
-        delete (globalThis as any).fetch;
+        delete (globalThis as { fetch?: CallableFunction }).fetch;
       });
 
       it('collects all files across commit pages', async () => {
@@ -122,8 +122,8 @@ describe('Pagination', () => {
       const fakePullInfo = { owner: 'foo', repo: 'bar', pullNumber: '1' };
 
       beforeEach(() => {
-        (globalThis as any).fetch = (input: any) => {
-          const url = typeof input === 'string' ? input : input.url;
+        (globalThis as { fetch?: CallableFunction }).fetch = (input: URL | RequestInfo) => {
+          const url = typeof input === 'string' ? input : (input as Request).url;
           const u = new URL(url);
 
           if (
@@ -166,7 +166,7 @@ describe('Pagination', () => {
       });
 
       afterEach(() => {
-        delete (globalThis as any).fetch;
+        delete (globalThis as { fetch?: CallableFunction }).fetch;
       });
 
       it('collects all files across merge request pages', async () => {
@@ -189,8 +189,8 @@ describe('Pagination', () => {
       };
 
       beforeEach(() => {
-        (globalThis as any).fetch = (input: any) => {
-          const url = typeof input === 'string' ? input : input.url;
+        (globalThis as { fetch?: CallableFunction }).fetch = (input: URL | RequestInfo) => {
+          const url = typeof input === 'string' ? input : (input as Request).url;
           if (
             url ===
             'https://api.bitbucket.org/2.0/repositories/foo%2Fbar/commit/123abc'
@@ -230,7 +230,7 @@ describe('Pagination', () => {
       });
 
       afterEach(() => {
-        delete (globalThis as any).fetch;
+        delete (globalThis as { fetch?: CallableFunction }).fetch;
       });
 
       it('collects all files across commit pages', async () => {
@@ -245,8 +245,8 @@ describe('Pagination', () => {
       const fakePullInfo = { owner: 'foo', repo: 'bar', pullNumber: '1' };
 
       beforeEach(() => {
-        (globalThis as any).fetch = (input: any) => {
-          const url = typeof input === 'string' ? input : input.url;
+        (globalThis as { fetch?: CallableFunction }).fetch = (input: URL | RequestInfo) => {
+          const url = typeof input === 'string' ? input : (input as Request).url;
           const u = new URL(url);
 
           if (u.pathname === '/2.0/repositories/foo%2Fbar/pullrequests/1') {
@@ -288,7 +288,7 @@ describe('Pagination', () => {
       });
 
       afterEach(() => {
-        delete (globalThis as any).fetch;
+        delete (globalThis as { fetch?: CallableFunction }).fetch;
       });
 
       it('collects all files across merge request pages', async () => {

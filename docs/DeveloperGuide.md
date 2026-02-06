@@ -185,11 +185,13 @@ See the following store-specific information, to handle release specification in
     - The tool `web-ext` (from mozilla) will help you in the [signing process](https://extensionworkshop.com/documentation/develop/extensions-and-the-add-on-id/) which is required for the use of add-ons without a debug-mode in firefox.
 
       For example, install it globally.
+
       ```
       npm install web-ext -g
       cd ./dist
       web-ext build
       ```
+
 - after publishing the application, a review is usually pending and will be published afterward
   - _Note_:
     - the add-on may be subject to additional review.

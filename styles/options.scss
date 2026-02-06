@@ -1,5 +1,23 @@
 @use 'common.scss';
 
+.button-help {
+  box-shadow: unset;
+  padding: 4px;
+  margin-bottom: 6px;
+  a {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  img {
+    padding-right: 2px;
+    vertical-align: middle;
+  }
+}
+
 .hosts-empty-placeholder {
   display: flex;
   flex-direction: column;
@@ -52,6 +70,7 @@
   white-space: pre-line;
 }
 
+// host dialog
 #hostDialog {
   border: none;
   border-radius: 12px;

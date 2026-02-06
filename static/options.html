@@ -10,11 +10,14 @@
 
   <body>
     <div style="padding: 1rem">
-      <div
-        class="headline-box-100"
-        style="font-size: 24px; padding-bottom: 1rem"
-      >
-        Configure Diff Extension
+      <div style="display: flex; gap: 24px">
+        <div
+          class="headline-box-100"
+          style="font-size: 24px; padding-bottom: 1rem"
+        >
+          Configure Diff Extension
+        </div>
+        <span class="help-button-placeholder"></span>
       </div>
       <div class="container">
         <div class="container-header">Hosts</div>
@@ -65,7 +68,17 @@
 
     <dialog id="hostDialog" class="host-dialog">
       <form method="dialog" class="container">
-        <div class="container-header" id="hostDialogTitle">Add host</div>
+        <div
+          style="
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+          "
+        >
+          <span class="container-header" id="hostDialogTitle">Add host</span>
+          <span class="help-button-placeholder"></span>
+        </div>
+
         <div class="divider"></div>
         <div class="container-content">
           <table class="hosts host-dialog-table">
@@ -195,6 +208,17 @@
         </div>
       </form>
     </dialog>
+    <template id="help-button-template">
+      <button class="button-help" style="margin-right: 8px">
+        <a
+          href="https://github.com/tracetronic/ecu.test-diff/blob/main/README.md#usage"
+          target="_blank"
+        >
+          Help on
+          <img width="24" src="icons/github.svg" />
+        </a>
+      </button>
+    </template>
     <script src="options.js"></script>
   </body>
 </html>

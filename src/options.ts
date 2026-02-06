@@ -417,6 +417,14 @@ hostDialog.registerEvents(async (scmHost, editRowId) => {
 });
 
 async function initUi() {
+  // help button in panel and dialog
+  const template = document.getElementById(
+    'help-button-template',
+  ) as HTMLTemplateElement;
+  for (const el of document.getElementsByClassName('help-button-placeholder')) {
+    (el as HTMLElement).appendChild(template.content.cloneNode(true));
+  }
+
   const addHostButton = document.getElementById('addhost');
   addHostButton.addEventListener('click', () => hostDialog.open());
 

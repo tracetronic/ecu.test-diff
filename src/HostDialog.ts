@@ -320,6 +320,7 @@ export class HostDialog {
     this.updateDialogVisibility();
     this.updateControls();
     this.dialog.showModal();
+    this.hostInput.focus();
   }
 
   private reset() {

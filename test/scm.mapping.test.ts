@@ -198,13 +198,14 @@ describe('Mapping & Filtering (response files to internal files)', () => {
 
       it('throws if commitData.files is missing or not an array', async () => {
         (bb.getCommitDetails as SinonStub).restore();
-        const stub = sinon
-          .stub(bb, 'getCommitDetails')
-          .resolves({ sha: 'sha', parents: [{ sha: 'parentSha' }] } as {
-            sha: string;
-            parents: { sha: string }[];
-            files: never[];
-          });
+        const stub = sinon.stub(bb, 'getCommitDetails').resolves({
+          sha: 'sha',
+          parents: [{ sha: 'parentSha' }],
+        } as {
+          sha: string;
+          parents: { sha: string }[];
+          files: never[];
+        });
 
         try {
           await bb.handleCommit(fakeCommitInfo, 'token');

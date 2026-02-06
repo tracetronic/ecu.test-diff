@@ -9,6 +9,7 @@ import {
   ServiceWorkerRequest,
 } from './types';
 import { scmAdapters } from './scm/index';
+import { normalizeHost } from './utils';
 
 browser.runtime.onMessage.addListener(async function (
   request: ServiceWorkerRequest,
@@ -75,6 +76,14 @@ function findScmHostForUrl(url: URL, hosts: ScmHost[]): ScmHost | undefined {
 
     const candidates: string[] = [];
     if (parts.length >= 2) {
+      /* Can be a non-repository-URL as well, we accept this,
+        because the URL gives no additional hint for differentiation. 
+        Bad examples:
+        - bitbucket.org/account/settings
+        - bitbucket.org/myWorkspace/workspace/overview
+        parts.length == 1 is ignored, because bitbucket automatically redirects
+        the short workspace URL to the overview page.
+        */
       candidates.push(`bitbucket.org/${parts[0]}/${parts[1]}`);
       candidates.push(`bitbucket.org/${parts[0]}`);
     }
@@ -82,20 +91,20 @@ function findScmHostForUrl(url: URL, hosts: ScmHost[]): ScmHost | undefined {
     candidates.push('bitbucket.org');
     const normalizedHosts = hosts
       .filter((h) => h.scm === 'bitbucket')
-      .map((h) => ({ host: h, key: normalizeHostKey(h.host) }));
+      .map((h) => ({ host: h, key: normalizeHost(h.host) }));
 
     for (const candidate of candidates) {
-      const key = normalizeHostKey(candidate);
+      const key = normalizeHost(candidate);
       const match = normalizedHosts.find((x) => x.key === key);
       if (match) return match.host;
     }
     return undefined;
   }
 
-  const key = normalizeHostKey(hostname);
+  const key = normalizeHost(hostname);
   const normalizedHosts = hosts.map((h) => ({
     host: h,
-    key: normalizeHostKey(h.host),
+    key: normalizeHost(h.host),
   }));
   return normalizedHosts.find((x) => x.key === key)?.host;
 }
@@ -144,9 +153,9 @@ function createAdapter(hostInfo: HostInfo, entry?: ScmHost) {
 
 async function getHostEntry(hostInfo: HostInfo): Promise<ScmHost> {
   const data = await getHosts();
-  const targetKey = normalizeHostKey(hostInfo.host);
+  const targetKey = normalizeHost(hostInfo.host);
   const entry = data.find(
-    (h) => normalizeHostKey(h.host) === targetKey && h.scm === hostInfo.scm,
+    (h) => normalizeHost(h.host) === targetKey && h.scm === hostInfo.scm,
   );
   if (!entry) throw new Error(ErrorType.HOST_NOT_FOUND);
   return entry;

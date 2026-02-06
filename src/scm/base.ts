@@ -51,8 +51,7 @@ export abstract class BaseScmAdapter {
 
   protected buildHttpError(response: Response, context: string): Error {
     const map = this.getHttpErrorMessages();
-    const statusMessage = 
-      map[response.status] ?? 'An unknown error occurred.';
+    const statusMessage = map[response.status] ?? 'An unknown error occurred.';
 
     return new Error(`Failed to retrieve ${context}. ${statusMessage}`);
   }

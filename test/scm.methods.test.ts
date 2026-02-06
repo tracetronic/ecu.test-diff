@@ -74,7 +74,9 @@ describe('Adapter Methods', () => {
         const adapter: any = new Class({ host, scm });
         const headers = adapter.createHeaders('abc123');
         const expectedToken =
-          adapter.hostInfo.scm === 'bitbucket' ? btoa('abc123') : 'abc123';
+          adapter.hostInfo.scm === 'bitbucket'
+            ? Buffer.from('abc123').toString('base64')
+            : 'abc123';
         expect(headers).to.have.property(
           'Authorization',
           `${tokenPrefix} ${expectedToken}`,

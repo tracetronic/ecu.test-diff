@@ -69,8 +69,11 @@ describe('Pagination', () => {
       };
 
       beforeEach(() => {
-        (globalThis as { fetch?: CallableFunction }).fetch = (input: URL | RequestInfo) => {
-          const url = typeof input === 'string' ? input : (input as Request).url;
+        (globalThis as { fetch?: CallableFunction }).fetch = (
+          input: URL | RequestInfo,
+        ) => {
+          const url =
+            typeof input === 'string' ? input : (input as Request).url;
           if (
             url ===
             'https://gitlab.com/api/v4/projects/foo%2Fbar/repository/commits/123abc'
@@ -122,8 +125,11 @@ describe('Pagination', () => {
       const fakePullInfo = { owner: 'foo', repo: 'bar', pullNumber: '1' };
 
       beforeEach(() => {
-        (globalThis as { fetch?: CallableFunction }).fetch = (input: URL | RequestInfo) => {
-          const url = typeof input === 'string' ? input : (input as Request).url;
+        (globalThis as { fetch?: CallableFunction }).fetch = (
+          input: URL | RequestInfo,
+        ) => {
+          const url =
+            typeof input === 'string' ? input : (input as Request).url;
           const u = new URL(url);
 
           if (
@@ -189,8 +195,11 @@ describe('Pagination', () => {
       };
 
       beforeEach(() => {
-        (globalThis as { fetch?: CallableFunction }).fetch = (input: URL | RequestInfo) => {
-          const url = typeof input === 'string' ? input : (input as Request).url;
+        (globalThis as { fetch?: CallableFunction }).fetch = (
+          input: URL | RequestInfo,
+        ) => {
+          const url =
+            typeof input === 'string' ? input : (input as Request).url;
           if (
             url ===
             'https://api.bitbucket.org/2.0/repositories/foo%2Fbar/commit/123abc'
@@ -245,8 +254,11 @@ describe('Pagination', () => {
       const fakePullInfo = { owner: 'foo', repo: 'bar', pullNumber: '1' };
 
       beforeEach(() => {
-        (globalThis as { fetch?: CallableFunction }).fetch = (input: URL | RequestInfo) => {
-          const url = typeof input === 'string' ? input : (input as Request).url;
+        (globalThis as { fetch?: CallableFunction }).fetch = (
+          input: URL | RequestInfo,
+        ) => {
+          const url =
+            typeof input === 'string' ? input : (input as Request).url;
           const u = new URL(url);
 
           if (u.pathname === '/2.0/repositories/foo%2Fbar/pullrequests/1') {

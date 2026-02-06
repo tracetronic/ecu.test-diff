@@ -62,7 +62,9 @@ describe('GitLab Adapter internals', () => {
       expect().fail('Expected error');
     } catch (err: unknown) {
       if (!(err instanceof Error)) throw err;
-      expect(err.message).to.match(/Failed to retrieve commit details. Unauthorized: Invalid or missing token./);
+      expect(err.message).to.match(
+        /Failed to retrieve commit details. Unauthorized: Invalid or missing token./,
+      );
     } finally {
       sinon.restore();
     }

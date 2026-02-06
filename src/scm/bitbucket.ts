@@ -1,5 +1,7 @@
 import { AuthType, ModifiedFile } from '../types.ts';
+import { normalizeHost } from '../utils.ts';
 import { BaseScmAdapter, CommitInfo, CommonChange, PullInfo } from './base.ts';
+import { Buffer } from 'buffer';
 
 type BitbucketChange = {
   status: string;
@@ -28,14 +30,12 @@ export class Bitbucket extends BaseScmAdapter {
     if (this.usesBearerAuth()) {
       return { Authorization: `Bearer ${token}` };
     }
-    return { Authorization: `Basic ${btoa(token)}` };
+
+    return { Authorization: `Basic ${Buffer.from(token).toString('base64')}` };
   }
 
   private parseHostScope() {
-    const raw = this.hostInfo.host
-      .trim()
-      .replace(/^https?:\/\//, '')
-      .replace(/\/+$/, '');
+    const raw = normalizeHost(this.hostInfo.host);
     const [hostname, workspace, repo] = raw.split('/');
     return { hostname, workspace, repo };
   }

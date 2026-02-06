@@ -62,7 +62,7 @@ export class Gitlab extends BaseScmAdapter {
         };
       });
   }
-  
+
   protected override getHttpErrorMessages(): Record<number, string> {
     return {
       401: 'Unauthorized: Invalid or missing token.',

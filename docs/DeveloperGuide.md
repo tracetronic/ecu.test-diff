@@ -72,13 +72,11 @@ Your compiled files are available inside the `./dist` folder after the build pro
 
 ## Integration
 
-For integration and testing into your browser, you have to note some differences:
+You can integrate and test the local extension in your browsers:
 
-In **Chrome/Edge** you can select the `./dist` folder inside you browser windows for importing the extension.
-
-In **Firefox**, you can test the extension only in debug-mode on the [debugging page](about:debugging#/runtime/this-firefox) (click on 'debug add-ons' when managing addons).
-You have to . The [debugging page](about:debugging#/runtime/this-firefox) opens.
-Select a typical file in `./dist` folder, e.g. `./dist/manifest.json`.
+- To load the local extension you need required rights (probably managed by your IT department). The browser will probably inform you if you are not allowed to contents apart from the official stores.
+- In **Chrome/Edge** you can load the extension on the [extensions page](chrome://extensions/). The slider `Developer mode` on the upper right has to be activated. Then, you can click on the button `Load unpacked` and select the `./dist` folder.
+- In **Firefox**, you can load the extension on the [debugging page](about:debugging#/runtime/this-firefox) (follow this link or click on 'debug add-ons' when managing addons). Click on the button `Load Temporary Add-on` and select a typical file in `./dist` folder, e.g. `./dist/manifest.json`.
 
 ## Testing / Linting / Code formatting
 

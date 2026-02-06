@@ -40,6 +40,7 @@ export type InternalAdapterMethodsBitbucket = BaseScmAdapter & {
   getCommitDetails: typeof scmAdapters.bitbucket.prototype.getCommitDetails;
   getApiUrl: typeof scmAdapters.bitbucket.prototype.getApiUrl;
   createHeaders: typeof scmAdapters.bitbucket.prototype.createHeaders;
+  setAuthType: typeof scmAdapters.bitbucket.prototype.setAuthType;
 };
 
 // Helper to create scm adapter instances for tests that make internal methods accessible

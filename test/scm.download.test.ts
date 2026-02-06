@@ -97,6 +97,20 @@ describe('Download helpers', () => {
       await adapter['downloadDummy']('some/path/file.ext', '.X');
       expect(spy.calledWith('blob://fake', 'diff/file/file.X.ext')).to.be(true);
     });
+
+    it('correct URL fallback when createObjectURL is not supported', async () => {
+      (URL.createObjectURL as SinonStub).restore();
+      (URL.createObjectURL as unknown) = undefined;
+      const ddSpy = sandbox
+        .stub(adapter, 'doDownload')
+        .resolves('/tmp/diff/file.ext');
+      const out = await adapter['downloadDummy']('path/to/file.ext', '.X');
+      const expectedDataUrl = 'data:text/ext;charset=utf-8,';
+      expect(
+        ddSpy.calledWith(expectedDataUrl, 'diff/file/file.X.ext'),
+      ).to.equal(true);
+      expect(out).to.equal('/tmp/diff/file.ext');
+    });
   });
 
   describe('doDownload()', () => {

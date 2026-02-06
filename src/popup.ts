@@ -322,6 +322,10 @@ async function initData() {
       action: Action.checkTab,
     } as ServiceWorkerRequest);
 
+    if (hostInfo === null) {
+      displayErrorMessage('Current tab does not have a valid URL!');
+      return;
+    }
     if (hostInfo.scm == null) {
       showAddHost(hostInfo.host);
       return;

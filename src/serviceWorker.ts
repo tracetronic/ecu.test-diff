@@ -48,24 +48,19 @@ async function getActiveTab() {
   return tab;
 }
 
-async function checkTab(): Promise<HostInfo> {
+async function checkTab(): Promise<HostInfo | null> {
   const tab = await getActiveTab();
   const url = URL.parse(tab.url);
   const currentHost = url.host;
+  if (!['http:', 'https:'].includes(url.protocol.toLowerCase())) {
+    return null;
+  }
 
   const hostList = await getHosts();
   const entry = findScmHostForUrl(url, hostList);
   if (entry) return { scm: entry.scm, host: entry.host };
 
   return { scm: null, host: currentHost };
-}
-
-function normalizeHostKey(host: string): string {
-  return host
-    .trim()
-    .replace(/^https?:\/\//, '')
-    .replace(/\/+$/, '')
-    .toLowerCase();
 }
 
 function findScmHostForUrl(url: URL, hosts: ScmHost[]): ScmHost | undefined {
@@ -180,6 +175,7 @@ async function fetchModifiedFiles(hostInfo: HostInfo) {
 
 async function downloadDiff(file: ModifiedFile) {
   const hostInfo = await checkTab();
+  if (hostInfo === null) throw new Error(ErrorType.HOST_NOT_FOUND);
   if (hostInfo.scm == null) throw new Error(ErrorType.SCM_NOT_SET);
 
   const entry = await getHostEntry(hostInfo);
@@ -191,6 +187,7 @@ async function downloadDiff(file: ModifiedFile) {
 
 async function downloadFile(file: ModifiedFile, what: 'old' | 'new') {
   const hostInfo = await checkTab();
+  if (hostInfo === null) throw new Error(ErrorType.HOST_NOT_FOUND);
   if (hostInfo.scm == null) throw new Error(ErrorType.SCM_NOT_SET);
 
   const entry = await getHostEntry(hostInfo);

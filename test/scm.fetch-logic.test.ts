@@ -1,4 +1,4 @@
-import { ModifiedFile } from '../src/types.ts';
+import { AuthType, ModifiedFile } from '../src/types.ts';
 import expect from 'expect.js';
 import sinon from 'sinon';
 import { createScmAdaptersForTests, globalWithFetch } from './utils.ts';
@@ -594,30 +594,67 @@ describe('Fetch Logic', () => {
     });
 
     describe('Bitbucket Adapter', () => {
-      it('returns true when status is 200', async () => {
-        globalThis.fetch = () => Promise.resolve({ status: 200 } as Response);
-        const result = await bb.test('token');
-        expect(result).to.equal(true);
+      // ensure clean defaults for adapter
+      const oldHost = bb.hostInfo.host;
+      afterEach(() => {
+        bb.hostInfo.host = oldHost;
+        bb.setAuthType(AuthType.Basic);
       });
 
-      it('returns false when status is 403 (valid token, missing scope)', async () => {
-        globalThis.fetch = () => Promise.resolve({ status: 403 } as Response);
-        const result = await bb.test('token');
-        expect(result).to.equal(true);
-      });
+      describe('basic auth (personal token)', () => {
+        it('returns true when status is 200', async () => {
+          globalThis.fetch = () => Promise.resolve({ status: 200 } as Response);
+          const result = await bb.test('token');
+          expect(result).to.equal(true);
+        });
 
-      it('returns false when status is 401 (invalid credentials)', async () => {
-        globalThis.fetch = () => Promise.resolve({ status: 401 } as Response);
-        const result = await bb.test('token');
-        expect(result).to.equal(false);
-      });
+        it('returns false if workspace/repo', async () => {
+          bb.hostInfo.host = 'bitbucket.org/workspace/repo';
+          const result = await bb.test('token');
+          expect(result).to.equal(false);
+        });
 
-      it('returns false on network error', async () => {
-        const errStub = sinon.stub(console, 'error');
-        globalThis.fetch = () => Promise.reject(new Error());
-        const result = await bb.test('token');
-        expect(result).to.equal(false);
-        errStub.restore();
+        it('returns true when status is 403 (valid token, missing scope)', async () => {
+          globalThis.fetch = () => Promise.resolve({ status: 403 } as Response);
+          const result = await bb.test('token');
+          expect(result).to.equal(true);
+        });
+
+        it('returns false when status is 401 (invalid credentials)', async () => {
+          globalThis.fetch = () => Promise.resolve({ status: 401 } as Response);
+          const result = await bb.test('token');
+          expect(result).to.equal(false);
+        });
+
+        it('returns false on network error', async () => {
+          const errStub = sinon.stub(console, 'error');
+          globalThis.fetch = () => Promise.reject(new Error());
+          const result = await bb.test('token');
+          expect(result).to.equal(false);
+          errStub.restore();
+        });
+      });
+      describe(' Workspace or repo token', () => {
+        beforeEach(() => bb.setAuthType(AuthType.Bearer));
+        it('Returns false if no workspace in URL', async () => {
+          const result = await bb.test('token');
+          expect(result).to.equal(false);
+        });
+
+        it('Returns true if workspace and repo in URL and status is 200', async () => {
+          bb.hostInfo.host = 'bitbucket.org/workspace/repo';
+          globalThis.fetch = () => Promise.resolve({ status: 200 } as Response);
+          const result = await bb.test('token');
+          expect(result).to.equal(true);
+        });
+
+        it('Returns true if workspace in URL and status is 200', async () => {
+          bb.hostInfo.host = 'bitbucket.org/workspace';
+          globalThis.fetch = () => Promise.resolve({ status: 200 } as Response);
+
+          const result = await bb.test('token');
+          expect(result).to.equal(true);
+        });
       });
     });
   });

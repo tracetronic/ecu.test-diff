@@ -1,33 +1,209 @@
 @use 'common.scss';
 
-input.invalid {
-  background-color: var(--color-funk-deep-red-50); // #ffb2b2;
-}
-input.valid {
-  background-color: lightgreen;
-}
-
-// make input scale in width
-fieldset {
-  position: relative;
-  max-width: 700px;
-  border: none;
-
-  input {
-    position: absolute;
-    left: 0;
-    right: 0;
+.button-help {
+  box-shadow: unset;
+  padding: 4px;
+  margin-bottom: 6px;
+  a {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    text-decoration: none;
+    color: inherit;
   }
+
+  img {
+    padding-right: 2px;
+    vertical-align: middle;
+  }
+}
+
+.hosts-empty-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #888;
+  padding: 2.5em 0 2em 0;
+  background: rgba(240, 240, 240, 0.7);
+  border-radius: 12px;
+}
+
+.hosts-empty-text {
+  font-size: 1.1em;
+  margin: 0 1em 1em 1em;
+}
+
+#addhost-empty {
+  font-size: 1.1em;
+  min-width: 120px;
 }
 
 // host table
 .hosts {
   text-align: left;
+  border-collapse: collapse;
+}
 
-  .hostinput {
-    min-width: 200px;
-  }
-  .tokeninput {
-    min-width: 400px;
-  }
+#hosts td,
+#hosts th {
+  padding: 2px 8px;
+}
+#hosts td:last-child,
+#hosts th:last-child {
+  padding-right: 2px;
+  padding-left: 0;
+}
+#hosts tbody tr {
+  border-bottom: 1px solid #ddd;
+}
+#hosts tbody tr:last-child {
+  border-bottom: none;
+}
+#hosts tbody tr.invalid-host {
+  background-color: var(--color-funk-deep-red-50);
+}
+#hosts tbody tr.valid-host {
+  background-color: lightgreen;
+}
+#message {
+  white-space: pre-line;
+}
+
+// host dialog
+#hostDialog {
+  border: none;
+  border-radius: 12px;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.25);
+  outline: none;
+  overflow: hidden;
+}
+
+.host-dialog .container {
+  min-width: 520px;
+  max-width: 640px;
+}
+.host-dialog .container-content {
+  display: flex;
+  flex-direction: column;
+}
+.host-dialog-table {
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: collapse;
+}
+.host-dialog-table th {
+  padding-bottom: 4px;
+}
+.host-dialog-table td {
+  vertical-align: middle;
+}
+.platform-input {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.host-dialog-table col.col-platform {
+  width: 30%;
+}
+.host-dialog-table col.col-url {
+  width: 70%;
+}
+.host-dialog .error {
+  display: block;
+  min-height: 1.4em;
+  font-size: 12px;
+  visibility: hidden;
+  white-space: nowrap;
+}
+.dialog-row.token-row {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  grid-template-rows: auto auto;
+  column-gap: 4px;
+  align-items: center;
+}
+.dialog-row.token-row .field-label {
+  grid-column: 1;
+  grid-row: 1;
+  width: 50px;
+}
+.dialog-row.token-row #dlg-token {
+  grid-column: 2;
+  grid-row: 1;
+  width: 100%;
+  box-sizing: border-box;
+}
+.dialog-row.token-row #dlg-token-toggle {
+  grid-column: 3;
+  grid-row: 1;
+  justify-self: end;
+}
+.dialog-row.token-row .error {
+  grid-column: 2;
+  grid-row: 2;
+}
+.hidden {
+  display: none !important;
+}
+#dlg-host {
+  width: 100%;
+  box-sizing: border-box;
+}
+.host-dialog .field-hint {
+  font-size: 12px;
+  color: #555;
+}
+.dialog-row {
+  margin-top: 4px;
+}
+#dlg-bitbucket-auth {
+  display: flex;
+  gap: 12px;
+  align-items: left;
+  vertical-align: middle;
+  margin-bottom: 4px;
+}
+#dlg-email-row .email-wrapper {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-template-rows: auto auto;
+  grid-auto-rows: min-content;
+  column-gap: 4px;
+  align-items: center;
+}
+#dlg-email-row .field-label {
+  grid-column: 1;
+  grid-row: 1;
+  width: 50px;
+}
+#dlg-email-row .emailinput {
+  grid-column: 2;
+  grid-row: 1;
+  box-sizing: border-box;
+  margin-right: 28px;
+}
+#dlg-email-row .error {
+  grid-column: 2;
+  grid-row: 2;
+}
+.host-dialog-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 24px;
+}
+
+.learnmore-link a {
+  color: #eb7100;
+  text-decoration: none;
+}
+
+.learnmore-link a:hover {
+  text-decoration: underline;
+}
+.dialog-row.token-row .learnmore-link {
+  grid-column: 2;
+  grid-row: 2;
+  justify-self: end;
 }

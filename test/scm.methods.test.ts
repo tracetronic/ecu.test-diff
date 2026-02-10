@@ -1,4 +1,4 @@
-import { scmAdapters } from '../src/scm.js';
+import { scmAdapters } from '../src/scm/index.ts';
 import { SUPPORTED_FILES } from '../src/types.ts';
 import expect from 'expect.js';
 
@@ -23,6 +23,16 @@ const adapterCases = [
     tokenPrefix: 'Bearer',
     scm: 'gitlab' as const,
   },
+  {
+    name: 'BitBucket',
+    Class: scmAdapters.bitbucket,
+    host: 'bitbucket.org',
+    customHost: 'bb.custom',
+    expectedApiUrl: 'https://api.bitbucket.org/2.0',
+    expectedCustomApiUrl: null, // Bitbucket only supports bitbucket.org
+    tokenPrefix: 'Basic',
+    scm: 'bitbucket' as const,
+  },
 ];
 
 describe('Adapter Methods', () => {
@@ -45,7 +55,13 @@ describe('Adapter Methods', () => {
         it(`${name} custom host returns correct API URL`, () => {
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           const adapter: any = new Class({ host: customHost, scm });
-          expect(adapter.getApiUrl()).to.equal(expectedCustomApiUrl);
+          if (adapter.hostInfo.scm === 'bitbucket') {
+            expect(() => adapter.getApiUrl()).to.throwError(
+              /Bitbucket Cloud only supports bitbucket.org/,
+            );
+          } else {
+            expect(adapter.getApiUrl()).to.equal(expectedCustomApiUrl);
+          }
         });
       },
     );
@@ -57,9 +73,13 @@ describe('Adapter Methods', () => {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const adapter: any = new Class({ host, scm });
         const headers = adapter.createHeaders('abc123');
+        const expectedToken =
+          adapter.hostInfo.scm === 'bitbucket'
+            ? Buffer.from('abc123').toString('base64')
+            : 'abc123';
         expect(headers).to.have.property(
           'Authorization',
-          `${tokenPrefix} abc123`,
+          `${tokenPrefix} ${expectedToken}`,
         );
       });
     });

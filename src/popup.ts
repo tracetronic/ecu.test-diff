@@ -63,6 +63,12 @@ async function fetchModifiedFiles(
 function showAddHost(host: string) {
   showElement('addhost');
   document.getElementById('addhost_host').textContent = host;
+  const scmSelect = document.getElementById('addhost_scm') as HTMLSelectElement;
+  let scm = 'github';
+  if (host == 'bitbucket.org') {
+    scm = 'bitbucket';
+  }
+  scmSelect.value = scm;
 }
 async function onAddHost() {
   const scmSelect = document.getElementById('addhost_scm') as HTMLSelectElement;
@@ -71,7 +77,10 @@ async function onAddHost() {
     action: Action.addHost,
     option: { hostInfo: { scm: scmSelect.value, host } },
   } as ServiceWorkerRequest);
-  initData();
+  await browser.storage.local.set({
+    pendingHost: { scm: scmSelect.value, host },
+  });
+  await browser.runtime.openOptionsPage();
 }
 
 // Function to display total changes
@@ -313,16 +322,23 @@ async function initData() {
       action: Action.checkTab,
     } as ServiceWorkerRequest);
 
+    if (hostInfo === null) {
+      displayErrorMessage('Current tab does not have a valid URL!');
+      return;
+    }
     if (hostInfo.scm == null) {
       showAddHost(hostInfo.host);
       return;
     }
     showElement('addhost', false);
-
-    displayModifiedFiles(await fetchModifiedFiles(hostInfo));
+    showElement('loader', true);
+    const files = await fetchModifiedFiles(hostInfo);
+    displayModifiedFiles(files);
   } catch (error) {
     console.error(error);
     displayErrorMessage(error);
+  } finally {
+    showElement('loader', false);
   }
 }
 

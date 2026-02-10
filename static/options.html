@@ -10,27 +10,38 @@
 
   <body>
     <div style="padding: 1rem">
-      <div
-        class="headline-box-100"
-        style="font-size: 24px; padding-bottom: 1rem"
-      >
-        Configure Diff Extension
+      <div style="display: flex; gap: 24px">
+        <div
+          class="headline-box-100"
+          style="font-size: 24px; padding-bottom: 1rem"
+        >
+          Configure Diff Extension
+        </div>
+        <span class="help-button-placeholder"></span>
       </div>
       <div class="container">
         <div class="container-header">Hosts</div>
         <div class="divider"></div>
         <div class="container-content">
+          <div
+            id="hosts-empty-placeholder"
+            class="hosts-empty-placeholder"
+            style="display: none"
+          >
+            <div class="hosts-empty-text">No hosts configured yet.</div>
+            <button class="button-100 primary" id="addhost-empty">
+              Add host
+            </button>
+          </div>
           <table class="hosts" id="hosts">
             <thead>
               <tr class="label-100">
                 <th>Platform</th>
                 <th>URL</th>
-                <th>Token</th>
                 <th></th>
               </tr>
             </thead>
             <tbody></tbody>
-
             <tfoot>
               <tr>
                 <td colspan="2" style="padding: 4px">
@@ -45,7 +56,6 @@
                     Check settings
                   </button>
                 </td>
-
                 <td />
                 <td />
               </tr>
@@ -53,9 +63,162 @@
           </table>
         </div>
       </div>
-      <button id="saveOptions" style="margin-top: 12px">Save settings</button>
       <span id="message" style="padding-left: 6px"></span>
     </div>
+
+    <dialog id="hostDialog" class="host-dialog">
+      <form method="dialog" class="container">
+        <div
+          style="
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+          "
+        >
+          <span class="container-header" id="hostDialogTitle">Add host</span>
+          <span class="help-button-placeholder"></span>
+        </div>
+
+        <div class="divider"></div>
+        <div class="container-content">
+          <table class="hosts host-dialog-table">
+            <colgroup>
+              <col class="col-platform" />
+              <col class="col-url" />
+            </colgroup>
+            <thead>
+              <tr class="label-100">
+                <th>Platform</th>
+                <th>URL</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  <div class="platform-input">
+                    <img
+                      id="dlg-scm-icon"
+                      width="16"
+                      style="padding-right: 2px; vertical-align: middle"
+                      src="icons/github.svg"
+                    />
+                    <select id="dlg-scm" class="scm-select">
+                      <option value="github">Github</option>
+                      <option value="gitlab">Gitlab</option>
+                      <option value="bitbucket">Bitbucket Cloud</option>
+                    </select>
+                  </div>
+                  <small
+                    style="display: block; min-height: 1.2em; margin-top: 2px"
+                  ></small>
+                </td>
+                <td>
+                  <input id="dlg-host" type="text" class="hostinput" />
+                  <small class="error" style="color: red"></small>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <small id="dlg-host-hint" class="field-hint" style="display: none">
+            You can narrow Bitbucket Cloud access by choosing a scoped host.<br />
+            The extension always uses the most specific matching host in this
+            order:
+            <ul>
+              <li>
+                <code>bitbucket.org/&lt;workspace&gt;/&lt;repository&gt;</code>
+                for project or repository access tokens
+              </li>
+              <li>
+                <code>bitbucket.org/&lt;workspace&gt;</code> for workspace
+                access tokens
+              </li>
+              <li><code>bitbucket.org</code> for personal access tokens</li>
+            </ul>
+          </small>
+
+          <div id="dlg-auth-label" class="label-100" style="font-weight: bold">
+            Authentication
+          </div>
+          <div id="dlg-bitbucket-auth" class="dialog-row">
+            <label class="radio-row">
+              <input
+                type="radio"
+                name="dlg-bitbucket-auth-type"
+                value="basic"
+                id="dlg-auth-basic"
+                checked
+              />
+              <span>Personal access token</span>
+            </label>
+            <label class="radio-row">
+              <input
+                type="radio"
+                name="dlg-bitbucket-auth-type"
+                value="bearer"
+                id="dlg-auth-bearer"
+              />
+              <span>Workspace, project or repository access token</span>
+            </label>
+          </div>
+
+          <div id="dlg-email-row" class="dialog-row email-row">
+            <div class="email-wrapper">
+              <label for="dlg-email" class="field-label">Email</label>
+              <input
+                id="dlg-email"
+                type="email"
+                class="emailinput"
+                placeholder="Your bitbucket email"
+              />
+              <small class="error" style="color: red"></small>
+            </div>
+          </div>
+
+          <div class="dialog-row token-row">
+            <label for="dlg-token" class="field-label">Token</label>
+            <input
+              id="dlg-token"
+              type="password"
+              class="tokeninput"
+              placeholder="Your access token"
+            />
+            <span
+              id="dlg-token-toggle"
+              class="material-symbols-outlined clickable"
+              style="vertical-align: text-top"
+            >
+              visibility
+            </span>
+            <small class="error" style="color: red"></small>
+            <small id="dlg-token-learnmore" class="learnmore-link">
+              <a href="#" target="_blank">Learn more about access tokens</a>
+            </small>
+          </div>
+
+          <div class="host-dialog-footer">
+            <span id="dlg-message" style="padding-left: 6px" />
+            <button type="button" id="dlg-btn-cancel" class="secondary">
+              Cancel
+            </button>
+            <button type="submit" id="dlg-btn-save" class="primary">
+              Save
+            </button>
+          </div>
+        </div>
+      </form>
+    </dialog>
+    <template id="help-button-template">
+      <button class="button-help" style="margin-right: 8px">
+        <a
+          href="https://github.com/tracetronic/ecu.test-diff/blob/main/README.md#usage"
+          target="_blank"
+        >
+          Help on
+          <img width="24" src="icons/github.svg" />
+        </a>
+      </button>
+    </template>
     <script src="options.js"></script>
   </body>
 </html>

@@ -51,7 +51,7 @@ Open the ecu.test diff project in your IDE of choice and run the following termi
 
 If you want to build the ecu.test diff extension locally for development purposes or for production use, you have access to different scripts:
 
-**<u>Note:</u>** All of these scripts can be found and modified within the './package.json' of the project.
+**<u>Note:</u>** All of these scripts can be found and modified within the `./package.json` of the project.
 
 **Firefox:**
 
@@ -72,22 +72,11 @@ Your compiled files are available inside the `./dist` folder after the build pro
 
 ## Integration
 
-For integration and testing into your browser, you have to note some differences:
+You can integrate and test the local extension in your browsers:
 
-In **Chrome/Edge** you can select the `./dist` folder inside you browser windows for importing the extension.
-
-In **Firefox**, you can test the extension only in debug-mode.
-You have to klick on 'debug add-ons' and can afterward select a .zip file for the import.
-You can create the .zip file on your own or use the tool web-ext (from mozilla).
-
-```
-npm install web-ext
-cd ./dist
-web-ext build
-```
-
-This tooling also provides help in the [signing process](https://extensionworkshop.com/documentation/develop/extensions-and-the-add-on-id/)
-which is required for the use of add-ons without a debug-mode in firefox.
+- To load the local extension you need required rights (probably managed by your IT department). The browser will probably inform you if you are not allowed to contents apart from the official stores.
+- In **Chrome/Edge** you can load the extension on the [extensions page](chrome://extensions/). The slider `Developer mode` on the upper right has to be activated. Then, you can click on the button `Load unpacked` and select the `./dist` folder.
+- In **Firefox**, you can load the extension on the [debugging page](about:debugging#/runtime/this-firefox) (follow this link or click on 'debug add-ons' when managing addons). Click on the button `Load Temporary Add-on` and select a typical file in `./dist` folder, e.g. `./dist/manifest.json`.
 
 ## Testing / Linting / Code formatting
 
@@ -100,7 +89,7 @@ Select the files you want to format and run the following command:
 
 ```bash
 # check all files
-npm prettier:check
+npm run prettier:check
 
 # fix findings for all files
 npm run prettier:write .
@@ -192,6 +181,17 @@ See the following store-specific information, to handle release specification in
 - a mozilla developer account is required
 - any secrets that are necessary for the publication process are set as `Actions secret`
 - any additional information, see [Submitting an add-on](https://extensionworkshop.com/documentation/publish/submitting-an-add-on/)
+  - _Note_:
+    - The tool `web-ext` (from mozilla) will help you in the [signing process](https://extensionworkshop.com/documentation/develop/extensions-and-the-add-on-id/) which is required for the use of add-ons without a debug-mode in firefox.
+
+      For example, install it globally.
+
+      ```
+      npm install web-ext -g
+      cd ./dist
+      web-ext build
+      ```
+
 - after publishing the application, a review is usually pending and will be published afterward
   - _Note_:
     - the add-on may be subject to additional review.

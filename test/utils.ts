@@ -1,4 +1,5 @@
-import { BaseScmAdapter, scmAdapters } from '../src/scm.js';
+import { BaseScmAdapter } from '../src/scm/base.js';
+import { scmAdapters } from '../src/scm/index.js';
 
 interface GlobalWithFetch extends GlobalThis {
   fetch?: (input: RequestInfo | { url: string }) => Promise<Response>;
@@ -30,6 +31,18 @@ export type InternalAdapterMethodsGitlab = BaseScmAdapter & {
   processChanges: typeof scmAdapters.gitlab.prototype.processChanges;
 };
 
+export type InternalAdapterMethodsBitbucket = BaseScmAdapter & {
+  testCommit: typeof scmAdapters.bitbucket.prototype.testCommit;
+  testPullRequest: typeof scmAdapters.bitbucket.prototype.testCommit;
+  handlePullRequest: typeof scmAdapters.bitbucket.prototype.handlePullRequest;
+  getPullDetails: typeof scmAdapters.bitbucket.prototype.getPullDetails;
+  handleCommit: typeof scmAdapters.bitbucket.prototype.handleCommit;
+  getCommitDetails: typeof scmAdapters.bitbucket.prototype.getCommitDetails;
+  getApiUrl: typeof scmAdapters.bitbucket.prototype.getApiUrl;
+  createHeaders: typeof scmAdapters.bitbucket.prototype.createHeaders;
+  setAuthType: typeof scmAdapters.bitbucket.prototype.setAuthType;
+};
+
 // Helper to create scm adapter instances for tests that make internal methods accessible
 export function createScmAdaptersForTests() {
   const gh = new scmAdapters.github({
@@ -40,5 +53,9 @@ export function createScmAdaptersForTests() {
     host: 'gitlab.com',
     scm: 'gitlab',
   }) as unknown as InternalAdapterMethodsGitlab;
-  return { gh, gl };
+  const bb = new scmAdapters.bitbucket({
+    host: 'bitbucket.org',
+    scm: 'bitbucket',
+  }) as unknown as InternalAdapterMethodsBitbucket;
+  return { gh, gl, bb };
 }

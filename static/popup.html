@@ -31,15 +31,15 @@
           Enable the extension for the current host?<br />Add
           <b id="addhost_host"></b> as
 
-          <select id="addhost_scm">
+          <select id="addhost_scm" class="scm-select">
             <option value="github">Github</option>
             <option value="gitlab">Gitlab</option>
+            <option value="bitbucket">Bitbucket Cloud</option>
           </select>
           <button class="button-50" id="addhost_btn_submit">Add</button>
         </p>
-
-        <div class="hidden" id="authStatus" style="min-width: 300px">
-          Loading...
+        <div class="loader hidden" id="loader" style="min-width: 300px">
+          Loading
         </div>
         <button
           id="go-to-options"
